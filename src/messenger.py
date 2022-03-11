@@ -9,7 +9,7 @@ while True:
 
     for result in results:
         LOGGER.info(
-            "%s %s %s %s" % (result[1], result[2], result[4], repr(result[3])[:50])
+            "to: %s; subject: %s; reply_to: %s; message: %s" % (result[1], result[2], result[4], repr(result[3])[:50])
         )
 
         try:
@@ -27,4 +27,4 @@ while True:
         MYCURSOR.execute(sql, val)
         MYDB.commit()
 
-    sleep(6)
+    sleep(3)

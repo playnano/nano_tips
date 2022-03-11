@@ -23,38 +23,36 @@ ch.setFormatter(formatter)
 LOGGER.addHandler(fh)
 LOGGER.addHandler(ch)
 config = configparser.ConfigParser()
-config.read(
-    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "tipper.ini")
-)
+config.read(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "config.ini"))
 
 # if we have a file, use it. Otherwise, load testing defaults
 try:
-    TIP_BOT_ON = config["BOT"]["tip_bot_on"]
-    TIP_BOT_USERNAME = config["BOT"]["tip_bot_username"]
+    ENVIRONMENT = config["APPLICATION"]["environment"]
+    PYTHON_COMMAND = config["APPLICATION"]["python_command"]
+    TIPPER_OPTIONS = config["APPLICATION"]["tipper_options"]
+    MESSENGER_OPTIONS = config["APPLICATION"]["messenger_options"]
+
+    TIPBOT_USERNAME = config["BOT"]["username"]
+    TIPBOT_OWNER = config["BOT"]["owner"]
+    TIPBOT_DONATION_ADDRESS = config["BOT"]["donation_address"]
     PROGRAM_MINIMUM = float(config["BOT"]["program_minimum"])
     RECIPIENT_MINIMUM = float(config["BOT"]["recipient_minimum"])
-    TIP_COMMANDS = config["BOT"]["tip_commands"].split(",")
+    TIPBOT_COMMANDS = config["BOT"]["commands"].split(",")
     DONATE_COMMANDS = config["BOT"]["donate_commands"].split(",")
-    TIPBOT_OWNER = config["BOT"]["tipbot_owner"]
-    TIPBOT_DONATION_ADDRESS = config["BOT"]["tipbot_donation_address"]
-    PYTHON_COMMAND = config["BOT"]["python_command"]
-    TIPPER_OPTIONS = config["BOT"]["tipper_options"]
-    MESSENGER_OPTIONS = config["BOT"]["messenger_options"]
     DONATION_ADMINS = config["BOT"]["donation_admins"]
     CURRENCY = config["BOT"]["currency"]
     STATUS_POST_ID = config["BOT"]["status_post_id"]
 
+    MYSQL_USER = config["MYSQL"]["user"]
+    MYSQL_PASSWORD = config["MYSQL"]["password"]
+    MYSQL_DBNAME = config["MYSQL"]["dbname"]
+
+    NODE_URL = config["NODE"]["url"]
+    REPRESENTATIVE = config["NODE"]["representative"]
+    USE_DPOW = config["NODE"].getboolean("use_dpow")
     DPOW_ENDPOINT = config["NODE"]["dpow_endpoint"]
     DPOW_TOKEN = config["NODE"]["dpow_token"]
     DPOW_USERNAME = config["NODE"]["dpow_username"]
-    DEFAULT_URL = config["NODE"]["default_url"]
-    REP = config["NODE"]["rep"]
-    USE_DPOW = config["NODE"]["use_dpow"]
-
-    CMC_TOKEN = config["OTHER"]["cmc_token"]
-
-    SQL_PASSWORD = config["SQL"]["sql_password"]
-    DATABASE_NAME = config["SQL"]["database_name"]
 
     try:
         url = "https://min-api.cryptocompare.com/data/price?fsym={}&tsyms={}".format(
@@ -64,52 +62,62 @@ try:
         results = json.loads(results.text)
         USD_VALUE = float(results["USD"])
     except requests.exceptions.ReadTimeout:
-        USD_VALUE = 0
+        USD_VALUE = 1
 except KeyError as e:
-    LOGGER.info("Failed to read tipper.ini. Falling back to test-defaults...")
+    LOGGER.info("Failed to read config.ini. Falling back to test-defaults...")
     LOGGER.info("Failed on: ", e)
-    STATUS_POST_ID = ""
-    SQL_PASSWORD = ""
-    DATABASE_NAME = ""
-    TIP_BOT_ON = True
-    TIP_BOT_USERNAME = "nano_tipper_z"
+
+    ENVIRONMENT = "development"
+    PYTHON_COMMAND = "python"
+    TIPPER_OPTIONS = ">> tipper_output 2>> tipper_error &"
+    MESSENGER_OPTIONS = ">> messenger_output 2>> messenger_error &"
+
+    TIPBOT_USERNAME = "nano_tips"
+    TIPBOT_OWNER = "playnano"
+    TIPBOT_DONATION_ADDRESS = "nano_3pnanopr3d5g7o45zh3nmdkqpaqxhhp3mw14nzr41smjz8xsrfyhtf9xac77"
     PROGRAM_MINIMUM = 0.0001
-    RECIPIENT_MINIMUM = 0
-    TIP_COMMANDS = ["!ntipz", "!nano_tipz"]
-    DONATE_COMMANDS = ["!nanocenterz"]
-    TIPBOT_OWNER = "zily88"
-    TIPBOT_DONATION_ADDRESS = (
-        "nano_3jy9954gncxbhuieujc3pg5t1h36e7tyqfapw1y6zukn9y1g6dj5xr7r6pij"
-    )
-    CMC_TOKEN = ""
-    DPOW_TOKEN = ""
-    DPOW_USERNAME = ""
-    DEFAULT_URL = ""
-    PYTHON_COMMAND = ""
-    TIPPER_OPTIONS = ""
-    MESSENGER_OPTIONS = ""
+    RECIPIENT_MINIMUM = 0.0001
+    TIPBOT_COMMANDS = ["!ntips", "!nano_tips"]
+    DONATE_COMMANDS = ["!nanocenters"]
     DONATION_ADMINS = []
     CURRENCY = "Nano"
-    REP = ""
-    DPOW_ENDPOINT = ""
+    STATUS_POST_ID = ""
+
+    MYSQL_USER = "root"
+    MYSQL_PASSWORD = ""
+    MYSQL_DBNAME = "NanoTips_development"
+
+    NODE_URL = "http://127.0.0.1:7076"
+    REPRESENTATIVE = 'nano_3pnanopr3d5g7o45zh3nmdkqpaqxhhp3mw14nzr41smjz8xsrfyhtf9xac77'
     USE_DPOW = False
+    DPOW_ENDPOINT = ""
+    DPOW_TOKEN = ""
+    DPOW_USERNAME = ""
+
     USD_VALUE = 1
+
+# if in development, commands end with _dev
+if ENVIRONMENT == 'development':
+    for idx, command in enumerate(TIPBOT_COMMANDS):
+        TIPBOT_COMMANDS[idx] = TIPBOT_COMMANDS[idx] + "_dev"
+    for idx, command in enumerate(DONATE_COMMANDS):
+        DONATE_COMMANDS[idx] = DONATE_COMMANDS[idx] + "_dev"
 
 # only fails if no databases have been created
 try:
     MYDB = mysql.connector.connect(
-        user="root",
-        password=SQL_PASSWORD,
+        user=MYSQL_USER,
+        password=MYSQL_PASSWORD,
         host="localhost",
         auth_plugin="mysql_native_password",
-        database=DATABASE_NAME,
+        database=MYSQL_DBNAME,
     )
     MYCURSOR = MYDB.cursor()
 except mysql.connector.errors.DatabaseError:
     try:
         MYDB = mysql.connector.connect(
-            user="root",
-            password=SQL_PASSWORD,
+            user=MYSQL_USER,
+            password=MYSQL_PASSWORD,
             host="localhost",
             auth_plugin="mysql_native_password",
         )
@@ -119,8 +127,8 @@ except mysql.connector.errors.DatabaseError:
         MYCURSOR = None
 
 try:
-    REDDIT = praw.Reddit("bot1")
-except:
+    REDDIT = praw.Reddit("nano_tips_bot")
+except:\
     REDDIT = None
 
 

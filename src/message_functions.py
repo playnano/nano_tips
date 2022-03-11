@@ -24,9 +24,10 @@ from tipper_rpc import (
 from text import WELCOME_CREATE, WELCOME_TIP, COMMENT_FOOTER, NEW_TIP
 import shared
 from shared import (
+    ENVIRONMENT,
     MYCURSOR,
     MYDB,
-    TIP_BOT_USERNAME,
+    TIPBOT_USERNAME,
     PROGRAM_MINIMUM,
     REDDIT,
     EXCLUDED_REDDITORS,
@@ -42,6 +43,19 @@ def handle_message(message):
     response = "not activated"
     parsed_text = parse_text(str(message.body))
     command = parsed_text[0].lower()
+
+    # ignore _dev commands if in production and ignore non _dev commands if in development
+    if ENVIRONMENT == 'production' and command.endswith("_dev"):
+        LOGGER.info(f"Environment {ENVIRONMENT} <-> command mismatch. Ignored")
+        return None
+
+    if ENVIRONMENT == 'development':
+        if command.endswith("_dev"):
+            command = command[:-4]
+        else:
+            LOGGER.info(f"Environment {ENVIRONMENT} <-> command mismatch. Ignored")
+            return None
+
     # only activate if it's not an opt-out command
     if command != "opt-out":
         activate(message.author)
@@ -108,10 +122,7 @@ def handle_message(message):
 
     # a few administrative tasks
     elif command == ["restart"]:
-        if str(message.author).lower() in [
-            TIPBOT_OWNER,
-            "rockmsockmjesus",
-        ]:  # "joohansson"]:
+        if str(message.author).lower() in [TIPBOT_OWNER]:
             add_history_record(
                 username=str(message.author),
                 action="restart",
@@ -121,10 +132,7 @@ def handle_message(message):
             )
             sys.exit(0)
     elif command in ["stop", "disable", "deactivate"]:
-        if str(message.author).lower() in [
-            TIPBOT_OWNER,
-            "rockmsockmjesus",
-        ]:  # "joohansson"]:
+        if str(message.author).lower() in [TIPBOT_OWNER]:
             add_history_record(
                 username=str(message.author),
                 action="restart",
@@ -274,9 +282,10 @@ def handle_create(message):
     if len(result) is 0:
         address = tipper_functions.add_new_account(username)["address"]
         response = WELCOME_CREATE % (address, address)
-        message_recipient = TIP_BOT_USERNAME
+        # I will keep the welcome bonus for now, but might remove it later
+        message_recipient = TIPBOT_USERNAME
         subject = "send"
-        message_text = "send 0.001 %s" % username
+        message_text = f"send{'_dev' if ENVIRONMENT == 'development' else ''} 0.001 {username}"
         sql = "INSERT INTO messages (username, subject, message) VALUES (%s, %s, %s)"
         val = (message_recipient, subject, message_text)
         MYCURSOR.execute(sql, val)
@@ -942,10 +951,7 @@ def handle_projects(message):
 
 def handle_delete_project(message):
     parsed_text = parse_text(str(message.body))
-    if (
-        (str(message.author) == TIPBOT_OWNER)
-        or (str(message.author).lower() == "rockmsockmjesus")
-    ) and len(parsed_text) > 1:
+    if (str(message.author) == TIPBOT_OWNER) and len(parsed_text) > 1:
         sql = "DELETE FROM projects WHERE project=%s"
         val = (parsed_text[1],)
         MYCURSOR.execute(sql, val)
@@ -984,7 +990,7 @@ def parse_recipient_username(recipient_text):
         if success["valid"] == "1":
             return {"address": recipient_text}
         # if not, check if it is a redditor disguised as an address (e.g.
-        # nano_is_awesome, nano_tipper_z)
+        # nano_is_awesome, nano_tips)
         else:
             try:
                 _ = getattr(REDDIT.redditor(recipient_text), "is_suspended", False)

@@ -4,28 +4,28 @@ from shared import from_raw
 COMMENT_FOOTER = """\n\n
 ***\n\n
 [*^(Nano)*](https://nano.org)*^( | )*
-[*^(Nano Tipper)*](https://github.com/danhitchcock/nano_tipper_z)*^( | )*
+[*^(Nano Tips)*](https://github.com/playnano/nano_tips)*^( | )*
 [*^(Free Nano!)*](https://nanolinks.info/#faucets-free-nano)*^( | )*
 [*^(Spend Nano)*](https://usenano.org/)*^( | )*
 [*^(Nano Links)*](https://nanolinks.info/)*^( | )*
-[*^(Opt Out)*](https://reddit.com/message/compose/?to=nano_tipper&subject=command&message=opt-out)
+[*^(Opt Out)*](https://reddit.com/message/compose/?to=nano_tips&subject=command&message=opt-out)
 """
 
 HELP = """
-Help from Nano Tipper! This bot handles tips via the Nano currency.
-[Visit us on GitHub](https://github.com/danhitchcock/nano_tipper_z), the [Wiki](http://reddit.com/r/nano_tipper/wiki/) 
-or /r/nano_tipper for more information on its use and its status. Be sure to read the 
-[Terms of Service](https://github.com/danhitchcock/nano_tipper_z#terms-of-service)\n\n
+Help from Nano Tips! This bot handles tips via the Nano currency.
+[Visit us on GitHub](https://github.com/playnano/nano_tips), the [Wiki](http://reddit.com/r/nano_tips/wiki/) 
+or /r/nano_tips for more information on its use and its status. Be sure to read the 
+[Terms of Service](https://github.com/playnano/nano_tips#terms-of-service)\n\n
 
 If you do not accept the Terms of Service, or do not with to participate, please respond with the text `opt-out`.\n\n
 
-Nano Tipper works in two ways -- either publicly tip a user on a subreddit, or send a PM to /u/nano_tipper with a PM command below.\n\n
-To tip 0.1 Nano on a comment or post on a [tracked subreddit](https://www.reddit.com/r/nano_tipper/comments/astwp6/nano_tipper_status/), make a comment starting with:\n
+Nano Tips works in two ways -- either publicly tip a user on a subreddit, or send a PM to /u/nano_tips with a PM command below.\n\n
+To tip 0.1 Nano on a comment or post on a [tracked subreddit](https://www.reddit.com/r/nano_tips/comments/astwp6/nano_tips_status/), make a comment starting with:\n
     !nano_tip 0.1
     -or-
     !ntip 0.1\n
 To tip anywhere on reddit, tag the bot as such (it won't post on the all subreddits, but it will PM the users):\n
-    /u/nano_tipper 0.1
+    /u/nano_tips 0.1
 You can tip any amount above the program minimum of 0.0001 Nano.\n\n
 Also, you can specify a currency, like USD:\n
     !ntip 1USD\n
@@ -42,14 +42,14 @@ For PM commands, create a new message with any of the following commands (be sur
     'opt-out' - Disables your account and donates your remaining Nano to the tipbot. 
     'opt-in' - Reenables your account. Your Nano may or may not still be available. 
     'help' - Get this help message\n
-If you wanted to send 0.01 Nano to zily88, reply:\n
-    send 0.01 zily88\n
-If you have any questions or bug fixes, please contact /u/zily88."""
+If you wanted to send 0.01 Nano to playnano, reply:\n
+    send 0.01 playnano\n
+If you have any questions or bug fixes, please contact /u/playnano."""
 
 WELCOME_CREATE = """
-Welcome to Nano Tipper, a reddit tip bot which allows you to tip and send the Nano Currency to your favorite redditors! 
-Your account is **active** and your Nano address is %s. By using this service, you agree 
-to the [Terms of Service](https://github.com/danhitchcock/nano_tipper_z#terms-of-service).\n\n
+Welcome to Nano Tips, a reddit tip bot which allows you to tip and send nano to your favorite redditors! 
+Your account is **active** and your nano address is %s. By using this service, you agree 
+to the [Terms of Service](https://github.com/playnano/nano_tips#terms-of-service).\n\n
 
 If you do not accept the Terms of Service, or do not with to participate, please respond with the text `opt-out`.\n\n
 
@@ -57,15 +57,15 @@ You will be receiving a tip of 0.001 Nano as a welcome gift! To load more Nano, 
 [Nano Faucets](https://nanolinks.info/#faucets-free-nano), or deposit some (click on the Nanode link for a QR code), 
 or receive a tip from a fellow redditor!\n\n
 ***\n\n
-Nano Tipper can be used in two ways. The most common is to tip other redditors publicly by replying to a comment on a 
-[tracked subreddit](https://www.reddit.com/r/nano_tipper/comments/astwp6/nano_tipper_status/). 
+Nano Tips can be used in two ways. The most common is to tip other redditors publicly by replying to a comment on a 
+[tracked subreddit](https://www.reddit.com/r/nano_tips/comments/astwp6/nano_tips_status/). 
 To tip someone 0.01 Nano, reply to their message with:\n\n
 ```!ntip 0.01```\n\n
 To tip a redditor on any subreddit, tag the bot instead of issuing a command:\n\n
-```/u/nano_tipper 0.01```\n\n
+```/u/nano_tips 0.01```\n\n
 In unfamiliar subreddits, the minimum tip is 1 Nano.\n\n
 ***\n\n
-There are also PM commands by [messaging](https://reddit.com/message/compose/?to=nano_tipper&subject=command&message=type_command_here) /u/nano_tipper. Remove any quotes, <'s and >'s.\n\n
+There are also PM commands by [messaging](https://reddit.com/message/compose/?to=nano_tips&subject=command&message=type_command_here) /u/nano_tips. Remove any quotes, <'s and >'s.\n\n
 ```send <amount> <valid_nano_address>``` Withdraw your Nano to your own wallet.\n\n
 ```send <amount> <redditor username>``` Send to another redditor.\n\n
 ```minimum <amount>``` Prevent annoying spam by setting a receiving tip minimum.\n\n
@@ -73,13 +73,13 @@ There are also PM commands by [messaging](https://reddit.com/message/compose/?to
 ```help``` Receive an in-depth help message.\n\n
 
 View your account on [the block explorer](https://nanocrawler.cc/explorer/account/%s).\n\n
-If you have any questions, please post at /r/nano_tipper
+If you have any questions, please post at /r/nano_tips
 """
 
 WELCOME_TIP = """
-Welcome to Nano Tipper, a reddit tip bot which allows you to tip and send the Nano Currency to your favorite redditors! 
+Welcome to Nano Tips, a reddit tip bot which allows you to tip and send the Nano Currency to your favorite redditors! 
 You have just received a Nano tip in the amount of ```%.4g Nano``` at your address %s.\n\n
-By using this service, you agree to the [Terms of Service](https://github.com/danhitchcock/nano_tipper_z#terms-of-service). Please activate your account by 
+By using this service, you agree to the [Terms of Service](https://github.com/playnano/nano_tips#terms-of-service). Please activate your account by 
 replying to this message or any tips which are 30 days old will be returned to the sender.\n\n
 
 If you do not accept the Terms of Service, or do not with to participate, please respond with the text `opt-out`.\n\n
@@ -87,15 +87,15 @@ If you do not accept the Terms of Service, or do not with to participate, please
 To load more Nano, try any of the the free 
 [Nano Faucets](https://nanolinks.info/#faucets-free-nano), or deposit some (click on the Nano Crawler link for a QR code).\n\n
 ***\n\n
-Nano Tipper can be used in two ways. The most common is to tip other redditors publicly by replying to a comment on a 
-[tracked subreddit](https://www.reddit.com/r/nano_tipper/comments/astwp6/nano_tipper_status/). 
+Nano Tips can be used in two ways. The most common is to tip other redditors publicly by replying to a comment on a 
+[tracked subreddit](https://www.reddit.com/r/nano_tips/comments/astwp6/nano_tips_status/). 
 To tip someone 0.01 Nano, reply to their message with:\n\n
 ```!ntip 0.01```\n\n
 To tip a redditor on any subreddit, tag the bot instead of issuing a command:\n\n
-```/u/nano_tipper 0.01```\n\n
+```/u/nano_tips 0.01```\n\n
 In unfamiliar subreddits, the minimum tip is 1 Nano.\n\n
 ***\n\n
-There are also PM commands by [messaging](https://reddit.com/message/compose/?to=nano_tipper&subject=command&message=type_command_here) /u/nano_tipper. Remove any quotes, <'s and >'s.\n\n
+There are also PM commands by [messaging](https://reddit.com/message/compose/?to=nano_tips&subject=command&message=type_command_here) /u/nano_tips. Remove any quotes, <'s and >'s.\n\n
 ```send <amount> <valid_nano_address>``` Withdraw your Nano to your own wallet.\n\n
 ```send <amount> <redditor username>``` Send to another redditor.\n\n
 ```minimum <amount>``` Prevent annoying spam by setting a receiving tip minimum.\n\n
@@ -103,7 +103,7 @@ There are also PM commands by [messaging](https://reddit.com/message/compose/?to
 ```help``` Receive an in-depth help message.\n\n
 
 View your account on Nano Crawler: https://nanocrawler.cc/explorer/account/%s\n\n
-If you have any questions, please post at /r/nano_tipper
+If you have any questions, please post at /r/nano_tips
 """
 
 NEW_TIP = """
@@ -123,25 +123,25 @@ RETURN_WARNING = (
 
 
 SUBJECTS = {
-    "RETURN_WARNING": "Nano Tipper - Please Activate Your Nano Tipper Account",
-    "RETURN_MESSAGE": "Nano Tipper - Returned Tips",
-    "first_tip": "Nano Tipper - Congrats on receiving your first Nano Tip!",
-    "new_tip": "Nano Tipper - You just received a new Nano tip!",
-    "help": "Nano Tipper - Help",
-    "balance": "Nano Tipper - Account Balance",
-    "minimum": "Nano Tipper - Tip Minimum",
-    "percentage": "Nano Tipper - Returned Tip Percentage for Donation",
-    "create": "Nano Tipper - Create",
-    "send": "Nano Tipper - Send",
-    "history": "Nano Tipper - History",
-    "silence": "Nano Tipper - Silence",
-    "subreddit": "Nano Tipper - Subreddit",
-    "opt-out": "Nano Tipper - Opt Out",
-    "opt-in": "Nano Tipper - Opt In",
-    "cf_projects": "Nano Tipper - Nanocenter Projects",
-    "success": "Nano Tipper - Your Tip Was Successful",
-    "failure": "Nano Tipper - You Tip Did Not Go Through",
-    "convert": "Nano Tipper - Your Currency Conversion",
+    "RETURN_WARNING": "Nano Tips - Please Activate Your Nano Tips Account",
+    "RETURN_MESSAGE": "Nano Tips - Returned Tips",
+    "first_tip": "Nano Tips - Congrats on receiving your first Nano Tip!",
+    "new_tip": "Nano Tips - You just received a new Nano tip!",
+    "help": "Nano Tips - Help",
+    "balance": "Nano Tips - Account Balance",
+    "minimum": "Nano Tips - Tip Minimum",
+    "percentage": "Nano Tips - Returned Tip Percentage for Donation",
+    "create": "Nano Tips - Create",
+    "send": "Nano Tips - Send",
+    "history": "Nano Tips - History",
+    "silence": "Nano Tips - Silence",
+    "subreddit": "Nano Tips - Subreddit",
+    "opt-out": "Nano Tips - Opt Out",
+    "opt-in": "Nano Tips - Opt In",
+    "cf_projects": "Nano Tips - Nanocenter Projects",
+    "success": "Nano Tips - Your Tip Was Successful",
+    "failure": "Nano Tips - You Tip Did Not Go Through",
+    "convert": "Nano Tips - Your Currency Conversion",
 }
 
 MINIMUM = {
@@ -180,7 +180,7 @@ SEND_TEXT = {
         "You don't have an account yet. Please PM me with `create` in the body to "
         "make an account."
     ),
-    110: "You must specify an amount and a user, e.g. `send 1 nano_tipper`.",
+    110: "You must specify an amount and a user, e.g. `send 1 nano_tips`.",
     120: "I could not read the amount or the currency code. Is '%s' a number? This could also mean the "
     "currency converter is down.",
     130: "Program minimum is %s Nano.",
@@ -196,7 +196,7 @@ SEND_TEXT = {
         "Sorry, the user has set a tip minimum of %s. "
         "Your tip of %s is below this amount."
     ),
-    190: "Sorry, the user has opted-out of using Nano Tipper.",
+    190: "Sorry, the user has opted-out of using Nano Tips.",
     200: "Please specify a Nanocenter project, e.g. `nanocenter 1 reddit_tipbot`",
     210: "No Nanocenter project named %s was found.",
 }
@@ -205,15 +205,15 @@ SEND_TEXT = {
 SEND_TEXT_MIN = {
     10: (
         "^[Sent](https://nanocrawler.cc/explorer/block/%s) ^%s ^Nano ^to ^(/u/%s) ^- "
-        "[^(Nano Tipper)](https://github.com/danhitchcock/nano_tipper_z)"
+        "[^(Nano Tips)](https://github.com/playnano/nano_tips)"
     ),
     11: (
         "^[Sent](https://nanocrawler.cc/explorer/block/%s) ^%s ^Nano ^to ^%s ^- [^(Na"
-        "no Tipper)](https://github.com/danhitchcock/nano_tipper_z)"
+        "no Tipper)](https://github.com/playnano/nano_tips)"
     ),
     20: (
         "^(Made a new account and )^[sent](https://nanocrawler.cc/explorer/block/%s) ^%s ^Nano ^to ^(/u/%s) ^- [^(Na"
-        "no Tipper)](https://github.com/danhitchcock/nano_tipper_z)"
+        "no Tipper)](https://github.com/playnano/nano_tips)"
     ),
     40: (
         "^[Sent](https://nanocrawler.cc/explorer/block/%s) ^(%s Nano to NanoCenter Pro"
@@ -221,7 +221,7 @@ SEND_TEXT_MIN = {
     ),
     100: (
         "^(Tip not sent. Error code )^[%s](https://github.com/danhitchcock/nano_tipp"
-        "er_z#error-codes) ^- [^(Nano Tipper)](https://github.com/danhitchcock/nano_"
+        "er_z#error-codes) ^- [^(Nano Tips)](https://github.com/danhitchcock/nano_"
         "tipper_z)"
     ),
 }
@@ -243,7 +243,7 @@ SUBREDDIT = {
     "not_mod": "You are not a moderator of /r/%s.",
     "minimum": "Sucessfully set your /r/%s minimum to %s, active immediately.",
     "deactivate": "Within 5 minutes, tipping will be deactivated in your subreddit %s.",
-    "activate": "Within 5 minutes, the Nano Tipper response in your Subreddit will be set to %s.",
+    "activate": "Within 5 minutes, the Nano Tips response in your Subreddit will be set to %s.",
     "error": "There was something wrong with your activate or minimum command.",
     "all": "Here is a list of every subreddit and its status:\n\nName, Status, Minimum\n\n",
     "one": "Here are the settings for subreddit /r/%s:\n\nName, Status, Minimum\n\n",

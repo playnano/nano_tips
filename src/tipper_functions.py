@@ -3,13 +3,14 @@ import requests
 import json
 from datetime import datetime
 from shared import (
+    ENVIRONMENT,
     MYCURSOR,
     MYDB,
     RECIPIENT_MINIMUM,
     EXCLUDED_REDDITORS,
-    TIP_BOT_USERNAME,
+    TIPBOT_USERNAME,
     LOGGER,
-    TIP_COMMANDS,
+    TIPBOT_COMMANDS,
     DONATE_COMMANDS,
     TIPBOT_DONATION_ADDRESS,
     REDDIT,
@@ -320,8 +321,8 @@ def parse_action(action_item):
     elif action_item.name.startswith("t1_") and bool(
         {parsed_text[0], parsed_text[-2], parsed_text[-3]}
         & (
-            set(TIP_COMMANDS + DONATE_COMMANDS).union(
-                {"/u/%s" % TIP_BOT_USERNAME, "u/%s" % TIP_BOT_USERNAME}
+            set(TIPBOT_COMMANDS + DONATE_COMMANDS).union(
+                {"/u/%s" % TIPBOT_USERNAME, "u/%s" % TIPBOT_USERNAME}
             )
         )
     ):
@@ -330,9 +331,9 @@ def parse_action(action_item):
     # otherwise, lets parse the message. t4 means either a message or username mention
     elif action_item.name.startswith("t4_"):
         # check if it is a message from the bot.
-        if action_item.author == TIP_BOT_USERNAME:
+        if action_item.author == TIPBOT_USERNAME:
             # check if its a send, otherwise ignore
-            if action_item.body.startswith("send 0.001 "):
+            if action_item.body.startswith(f"send{'_dev' if ENVIRONMENT == 'development' else ''} 0.001 "):
                 LOGGER.info(
                     f"Faucet Tip: {action_item.author} - {action_item.body[:20]}"
                 )

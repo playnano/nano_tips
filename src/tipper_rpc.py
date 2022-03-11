@@ -3,10 +3,10 @@ import qrcode
 import requests
 from shared import (
     DPOW_TOKEN,
-    DEFAULT_URL,
+    NODE_URL,
     LOGGER,
     DPOW_USERNAME,
-    REP,
+    REPRESENTATIVE,
     DPOW_ENDPOINT,
     USE_DPOW,
 )
@@ -14,7 +14,7 @@ from shared import (
 
 def perform_curl(data=None, URL=None, timeout=30):
     if URL is None:
-        URL = DEFAULT_URL
+        URL = NODE_URL
     r = requests.post(
         URL, headers={"Content-Type": "application/json"}, data=json.dumps(data)
     )
@@ -83,7 +83,7 @@ def send_block(origin, key, amount, destination, rep=None, work=None):
     balance = balance - amount
     previous = info["frontier"]
     if rep is None:
-        rep = REP
+        rep = REPRESENTATIVE
     data = {
         "action": "block_create",
         "type": "state",
@@ -116,7 +116,7 @@ def open_block(account, key, rep=None, work=None):
     :return: str block-string for json
     """
     if rep is None:
-        rep = REP
+        rep = REPRESENTATIVE
     try:
         account_info(account)["frontier"]
         return "Previous block exists. Use receive."
@@ -152,7 +152,7 @@ def receive_block(account, key, sent_hash, rep=None):
     :return: str block-string for json
     """
     if rep is None:
-        rep = REP
+        rep = REPRESENTATIVE
     previous = account_info(account)["frontier"]
     sent_block = get_block_by_hash(sent_hash)
     sent_previous_hash = sent_block["previous"]
@@ -284,7 +284,7 @@ def open_or_receive_blocks(account, key, blocks, rep=None):
 
     work = None
     if rep is None:
-        rep = REP
+        rep = REPRESENTATIVE
 
     # if there is a previous block, receive the blocks
     try:
@@ -325,7 +325,7 @@ def open_or_receive_blocks(account, key, blocks, rep=None):
 def open_or_receive_block(account, key, sent_hash, rep=None):
     work = None
     if rep is None:
-        rep = REP
+        rep = REPRESENTATIVE
 
     # if there is a previous block, receive the blocks
     try:

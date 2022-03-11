@@ -1,10 +1,10 @@
 import time
 from datetime import datetime
-from shared import DATABASE_NAME, MYDB, MYCURSOR, PROGRAM_MINIMUM
+from shared import MYSQL_DBNAME, MYDB, MYCURSOR, PROGRAM_MINIMUM
 
 
 def init_db():
-    MYCURSOR.execute("CREATE DATABASE %s" % DATABASE_NAME)
+    MYCURSOR.execute("CREATE DATABASE %s" % MYSQL_DBNAME)
     MYDB.commit()
 
 
@@ -14,8 +14,8 @@ def init_history():
         "id INT AUTO_INCREMENT PRIMARY KEY, "
         "username VARCHAR(255), "
         "action VARCHAR(255), "
-        "reddit_time TIMESTAMP, "
-        "sql_time TIMESTAMP, "
+        "reddit_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+        "sql_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
         "address VARCHAR(255), "
         "comment_or_message VARCHAR(255), "
         "recipient_username VARCHAR(255), "
@@ -37,8 +37,8 @@ def init_returns():
         "CREATE TABLE returns ("
         "id INT AUTO_INCREMENT PRIMARY KEY, "
         "username VARCHAR(255), "
-        "reddit_time TIMESTAMP, "
-        "sql_time TIMESTAMP, "
+        "reddit_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+        "sql_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
         "recipient_username VARCHAR(255), "
         "recipient_address VARCHAR(255), "
         "amount VARCHAR(255), "

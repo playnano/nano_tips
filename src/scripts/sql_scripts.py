@@ -66,7 +66,7 @@ def pull_history(u, n):
 
 
 @click.command()
-@click.argument("u")
+@click.argument("-u", default=None)
 def delete_user(u):
     sql = "DELETE FROM accounts WHERE username = %s"
     val = (u,)

@@ -26,12 +26,12 @@ shared.MYDB = MockedDB()
 shared.MYCURSOR = MockedCursor()
 shared.REDDIT = None
 shared.SUBREDDITS = None
-shared.DEFAULT_URL = None
+shared.NODE_URL = None
 import text
 import tipbot
 from tipbot import stream_comments_messages
 import pytest
-from shared import TIP_COMMANDS, TIP_BOT_USERNAME, DONATE_COMMANDS, to_raw
+from shared import TIPBOT_COMMANDS, TIPBOT_USERNAME, DONATE_COMMANDS, to_raw
 import message_functions
 from message_functions import handle_send
 import comment_functions
@@ -272,19 +272,19 @@ def test_parse_action(parse_action_mocks):
     tests = [
         (
             "comment",
-            RedditMessage("t1_1", "daniel", "", f"{TIP_COMMANDS[0]} .1"),
+            RedditMessage("t1_1", "daniel", "", f"{TIPBOT_COMMANDS[0]} .1"),
         ),
         (
             "comment",
-            RedditMessage("t1_2", "daniel", "", f"great job {TIP_COMMANDS[0]} .1"),
+            RedditMessage("t1_2", "daniel", "", f"great job {TIPBOT_COMMANDS[0]} .1"),
         ),
         (
             "comment",
-            RedditMessage("t1_3", "daniel", "", f"/u/{TIP_BOT_USERNAME} .1"),
+            RedditMessage("t1_3", "daniel", "", f"/u/{TIPBOT_USERNAME} .1"),
         ),
         (
             "comment",
-            RedditMessage("t1_4", "daniel", "", f"nice /u/{TIP_BOT_USERNAME} .1"),
+            RedditMessage("t1_4", "daniel", "", f"nice /u/{TIPBOT_USERNAME} .1"),
         ),
         (
             "message",
@@ -292,10 +292,10 @@ def test_parse_action(parse_action_mocks):
         ),
         (
             "faucet_tip",
-            RedditMessage("t4_6", "nano_tipper_z", "", "send 0.001 someone"),
+            RedditMessage("t4_6", "nano_tips", "", "send 0.001 someone"),
         ),
     ]
-    print("*" * 80, TIP_BOT_USERNAME)
+    print("*" * 80, TIPBOT_USERNAME)
     for test in tests:
         assert test[0] == tipper_functions.parse_action(test[1])
 
@@ -370,7 +370,7 @@ def test_handle_send_from_PM(handle_send_from_message_mocks):
     assert response == {"status": 110, "username": "rich"}
     assert (
         text.make_response_text(message, response)
-        == "You must specify an amount and a user, e.g. `send 1 nano_tipper`."
+        == "You must specify an amount and a user, e.g. `send 1 nano_tips`."
     )
 
     # could not parse the amount
@@ -410,7 +410,7 @@ def test_handle_send_from_PM(handle_send_from_message_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "Sorry, the user has opted-out of using Nano Tipper."
+        == "Sorry, the user has opted-out of using Nano Tips."
     )
 
     # send to an Excluded redditor (i.e. a currency code)
@@ -559,7 +559,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     """
 
     # sender has no account
-    message = RedditMessage("t4_5", "DNE", "", f"{TIP_COMMANDS[0]} 0.01")
+    message = RedditMessage("t4_5", "DNE", "", f"{TIPBOT_COMMANDS[0]} 0.01")
     response = send_from_comment(message)
     assert response == {
         "status": 100,
@@ -574,7 +574,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     )
 
     # no amount specified
-    message = RedditMessage("t4_5", "rich", "", f"{TIP_COMMANDS[0]}")
+    message = RedditMessage("t4_5", "rich", "", f"{TIPBOT_COMMANDS[0]}")
     response = send_from_comment(message)
     assert response == {
         "status": 110,
@@ -585,11 +585,11 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "You must specify an amount and a user, e.g. `send 1 nano_tipper`."
+        == "You must specify an amount and a user, e.g. `send 1 nano_tips`."
     )
 
     # could not parse the amount
-    message = RedditMessage("t4_5", "rich", "", f"{TIP_COMMANDS[0]} 0.0sdf1")
+    message = RedditMessage("t4_5", "rich", "", f"{TIPBOT_COMMANDS[0]} 0.0sdf1")
     response = send_from_comment(message)
     assert response == {
         "status": 120,
@@ -604,7 +604,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
         == "I could not read the amount or the currency code. Is '0.0sdf1' a number? This could also mean the currency converter is down."
     )
     # send below program limit
-    message = RedditMessage("t4_5", "rich", "", f"{TIP_COMMANDS[0]} 0.00001")
+    message = RedditMessage("t4_5", "rich", "", f"{TIPBOT_COMMANDS[0]} 0.00001")
     response = send_from_comment(message)
     assert response == {
         "amount": 10000000000000000000000000,
@@ -619,7 +619,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     )
 
     # send to an Excluded redditor (i.e. a currency code)
-    message = RedditMessage("t4_5", "rich", "", f"{TIP_COMMANDS[0]} 0.01 USD")
+    message = RedditMessage("t4_5", "rich", "", f"{TIPBOT_COMMANDS[0]} 0.01 USD")
     response = send_from_comment(message)
     assert response == {
         "status": 140,
@@ -637,7 +637,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
 
     # subreddit is not tracked
     message = RedditMessage(
-        "t4_5", "rich", "", f"/u/{TIP_BOT_USERNAME} 0.01", subreddit="not_tracked_sub"
+        "t4_5", "rich", "", f"/u/{TIPBOT_USERNAME} 0.01", subreddit="not_tracked_sub"
     )
     response = send_from_comment(message)
     assert response == {
@@ -655,7 +655,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
 
     # send greater than sender balance
     message = RedditMessage(
-        "t4_5", "poor", "", f"{TIP_COMMANDS[0]} 0.01", subreddit="friendly_sub"
+        "t4_5", "poor", "", f"{TIPBOT_COMMANDS[0]} 0.01", subreddit="friendly_sub"
     )
     response = send_from_comment(message)
     assert response == {
@@ -676,7 +676,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
         "t4_5",
         "rich",
         "",
-        f"{TIP_COMMANDS[0]} 0.01",
+        f"{TIPBOT_COMMANDS[0]} 0.01",
         subreddit="friendly_sub",
         parent_author="out",
     )
@@ -692,7 +692,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "Sorry, the user has opted-out of using Nano Tipper."
+        == "Sorry, the user has opted-out of using Nano Tips."
     )
 
     # send less than recipient minimum
@@ -700,7 +700,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
         "t4_5",
         "rich",
         "",
-        f"{TIP_COMMANDS[0]} 0.01",
+        f"{TIPBOT_COMMANDS[0]} 0.01",
         subreddit="friendly_sub",
         parent_author="high_min",
     )
@@ -725,7 +725,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
         "t4_5",
         "rich",
         "",
-        f"{TIP_COMMANDS[0]} 0.01",
+        f"{TIPBOT_COMMANDS[0]} 0.01",
         subreddit="friendly_sub",
         parent_author="dne",
     )
@@ -751,8 +751,8 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     assert (
         text.make_response_text(message, response)
         == "^(Made a new account and )^[sent](https://nanocrawler.cc/explorer/block"
-        "/success!) ^0.01 ^Nano ^to ^(/u/dne) ^- [^(Nano Tipper)](https://githu"
-        "b.com/danhitchcock/nano_tipper_z)"
+        "/success!) ^0.01 ^Nano ^to ^(/u/dne) ^- [^(Nano Tips)](https://githu"
+        "b.com/playnano/nano_tips)"
     )
 
     # send to user
@@ -760,7 +760,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
         "t4_5",
         "rich",
         "",
-        f"{TIP_COMMANDS[0]} 0.01",
+        f"{TIPBOT_COMMANDS[0]} 0.01",
         subreddit="friendly_sub",
         parent_author="poor",
     )
@@ -786,7 +786,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     assert (
         text.make_response_text(message, response)
         == "^[Sent](https://nanocrawler.cc/explorer/block/success!) ^0.01 ^Nano "
-        "^to ^(/u/poor) ^- [^(Nano Tipper)](https://github.com/danhitchcock/nan"
+        "^to ^(/u/poor) ^- [^(Nano Tips)](https://github.com/danhitchcock/nan"
         "o_tipper_z)"
     )
 
@@ -795,7 +795,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
         "t4_5",
         "rich",
         "",
-        f"something something {TIP_COMMANDS[0]} 0.01",
+        f"something something {TIPBOT_COMMANDS[0]} 0.01",
         subreddit="friendly_sub",
         parent_author="poor",
     )
@@ -821,7 +821,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
         "t4_5",
         "rich",
         "",
-        f"/u/{TIP_BOT_USERNAME} 0.01",
+        f"/u/{TIPBOT_USERNAME} 0.01",
         subreddit="friendly_sub",
         parent_author="poor",
     )
@@ -847,7 +847,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
         "t4_5",
         "rich",
         "",
-        f"something something /u/{TIP_BOT_USERNAME} 0.01",
+        f"something something /u/{TIPBOT_USERNAME} 0.01",
         subreddit="friendly_sub",
         parent_author="poor",
     )
@@ -882,7 +882,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "You must specify an amount and a user, e.g. `send 1 nano_tipper`."
+        == "You must specify an amount and a user, e.g. `send 1 nano_tips`."
     )
 
     # send to non-existent nanocenter project

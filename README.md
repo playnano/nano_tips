@@ -1,12 +1,18 @@
-# Nano Tipper
- is a reddit tipping service to easily give Nano to your favorite redditors! [Nano](https://nano.org) is a fast and feeless cryptocurrency that can be traded at numerous exchanges. Before using Nano Tipper, please take a look at the [Terms of Service](https://github.com/danhitchcock/nano_tipper_z#terms-of-service)
-### To get started with Nano Tipper, either:
-A) **Create an account** by [sending a message](https://reddit.com/message/compose/?to=nano_tipper&subject=hi&message=create) to /u/nano_tipper with 'create' or 'register' in the message body. You will receive a Nano address, to which you can add Nano\*. You will receive a 0.001 Nano tip for registering! Also, try any of the faucets at [Nano Links](https://nanolinks.info/#faucets-free-nano) (\**Nano Tipper is in early beta! Only send small amounts of Nano*.)
-\-or-
-B) **Receive a Nano tip** from a fellow redditor, and you will automatically have an account made! be sure to activate it afterwards by [sending a message](https://reddit.com/message/compose/?to=nano_tipper&subject=command&message=create) to /u/nano_tipper.
-Once you have funds in your account, you can tip other redditors, or send to nano address via PM to /u/nano_tipper.
+# Nano Tips
+Nano Tips is a reddit tipping service to easily give Nano to your favorite redditors, posts and comments! [Nano](https://nano.org) is a fast and feeless cryptocurrency that can be traded at numerous exchanges. Before using Nano Tips, please take a look at the [Terms of Service](https://github.com/playnano/nano_tips#terms-of-service)
+
+Nano Tips is a fork of [Nano Tipper](https://github.com/danhitchcock/nano_tipper_z), which [was discontinued](https://www.reddit.com/r/nanocurrency/comments/t5uotr/reddit_tipbot_to_shut_down/) on March 7th, 2022.
+### To get started with Nano Tips, either:
+A) **Create an account** by [sending a message](https://reddit.com/message/compose/?to=nano_tips&subject=hi&message=create) to /u/nano_tips with 'create' or 'register' in the message body. You will receive a Nano address, to which you can add Nano\*. You will receive a 0.001 Nano tip for registering! Also, try any of the faucets at [Nano Links](https://nanolinks.info/#faucets-free-nano)
+
+-or-
+
+B) **Receive a Nano tip** from a fellow redditor, and you will automatically have an account made! be sure to activate it afterwards by [sending a message](https://reddit.com/message/compose/?to=nano_tips&subject=command&message=create) to /u/nano_tips.
+Once you have funds in your account, you can tip other redditors, or send to nano address via PM to /u/nano_tips.
+
+(\**Nano Tips is in early beta! Only send small amounts of Nano*.)
 # Comment Replies:
-Nano Tipper is intended for tipping on reddit posts and replies. On any [tracked subreddit](https://www.reddit.com/r/nano_tipper/comments/lp252z/tipper_subreddits_and_status/) you can tip and type a message like:
+Nano Tips is intended for tipping on reddit posts and replies. On any [tracked subreddit](https://www.reddit.com/r/nano_tips/comments/lp252z/tipper_subreddits_and_status/) you can tip and type a message like:
 
     !ntip 0.01 This is great!
 
@@ -16,17 +22,17 @@ This will tip a redditor 0.01 Nano. `!ntip AMOUNT` must be the first thing in yo
 
 Or from anywhere on reddit, you can tip a commenter by:
 
-    /u/nano_tipper 0.01 This is great!
+    /u/nano_tips 0.01 This is great!
    
 or
 
-    This is great! /u/nano_tipper 0.01
+    This is great! /u/nano_tips 0.01
 
 Even specify a currency!
 
     !ntip 1USD Enjoy a dollar!
 
-If the subreddit is a [friendly subreddit](https://www.reddit.com/r/nano_tipper/comments/lp252z/tipper_subreddits_and_status/) (which correlates to [tracked subreddit](https://www.reddit.com/r/nano_tipper/comments/lp252z/tipper_subreddits_and_status/)), the bot will respond with a message. If the subreddit is not tracked, there is a $1USD minimum and the bot will send PMs instead of responding. If the subreddit is marked as "silent", PMs will be sent.
+If the subreddit is a [friendly subreddit](https://www.reddit.com/r/nano_tips/comments/lp252z/tipper_subreddits_and_status/) (which correlates to [tracked subreddit](https://www.reddit.com/r/nano_tips/comments/lp252z/tipper_subreddits_and_status/)), the bot will respond with a message. If the subreddit is not tracked, there is a $1USD minimum and the bot will send PMs instead of responding. If the subreddit is marked as "silent", PMs will be sent.
 
 
 
@@ -40,14 +46,14 @@ for a list of NanoCenter projects, see the PM commands below.
     
 # Private Messages
 
-Nano Tipper also works by PM (NOT CHAT). [Send a message](https://reddit.com/message/compose/?to=nano_tipper&subject=hi&message=type_command_here) to /u/nano_tipper for a variety of actions.
+Nano Tips also works by PM (NOT CHAT). [Send a message](https://reddit.com/message/compose/?to=nano_tips&subject=hi&message=type_command_here) to /u/nano_tips for a variety of actions.
 
-To send 0.1 Nano to zily88, include this text in the message body:
+To send 0.1 Nano to user, include this text in the message body:
 
-    send 0.1 /u/zily88
+    send 0.1 /u/playnano
 -or-
 
-    send 0.1 zily88
+    send 0.1 playnano
 
 To send 0.1 Nano to nano\_1ssr4sbop5wnkbkpk7y7ekewie7tygtjgdukm9jq7d1m3j6ocfskwyx77awd, include this text in the message body:
 
@@ -76,31 +82,30 @@ There are many other commands.
 'opt-in' - Reenables your account. Your Nano may or may not still be available. 
 ```
 ### Activate the TipBot on Your Subreddit
-If you are a moderator of a subreddit, and would like to tipping to your sub, use the `subreddit` command. For example, for me to activate tipping on my /r/nano_tipper subreddit, I send a PM to the bot saying:
+If you are a moderator of a subreddit, and would like to tipping to your sub, use the `subreddit` command. For example, for me to activate tipping on my /r/nano_tips subreddit, I send a PM to the bot saying:
 
-`subreddit nano_tipper activate`
+`subreddit nano_tips activate`
 
 This will allow the bot to look for !ntip commands and respond to posts. 
 -or- If I don't want the bot to respond, but still want tips:
 
-`subreddit nano_tipper activate silent`
+`subreddit nano_tips activate silent`
 
 -or- for a cleaner tipbot response:
 
-`subreddit nano_tipper activate minimal`
+`subreddit nano_tips activate minimal`
 
 To deactivate, simply PM:
 
-`subreddit nano_tipper deactivate`
+`subreddit nano_tips deactivate`
 
 To set a minimum, specify like so:
 
-`subreddit nano_tipper minimum 1`
+`subreddit nano_tips minimum 1`
 
 ### Here's a few other great links:
-[Nano Tipper Subreddit](https://reddit.com/r/nano_tipper) -- Post any questions about Nano Tipper
-[Nano Tipper GitHub](https://github.com/danhitchcock/nano_tipper_z) -- This software is open source!
-[Nano Tipper Wiki](https://www.reddit.com/r/nano_tipper/wiki) -- The Subreddit Wiki
+[Nano Tips Subreddit](https://reddit.com/r/nano_tips) -- Post any questions about Nano Tips
+[Nano Tips GitHub](https://github.com/playnano/nano_tips) -- This software is open source!
 [Nano Currency](https://nano.org) -- The Official Nano website
 [Nano Links](https://nanolinks.info) -- has numerous useful links to get to using Nano!
 [Nano Subreddit](https://www.reddit.com/r/nanocurrency) -- The official Nano Subreddit
@@ -132,12 +137,12 @@ Users are allowed 5 requests every 30 seconds. If you do more than that, the bot
 Probably not. It's most likely the bot was temporarily disconnected. If a command is issued while the bot is offline, the command will not be seen. If no response is received from the bot after a few minutes, send a message to the bot with the text 'history'. If you get a response and the tip isn't in your history, that means it wasn't seen. If you don't get a response, the bot is probably still offline. Try again in a few minutes.
 
 ## I found a bug or I have a concern. Question Mark?
-Send /u/zily88 a PM on reddit, or post on https://reddit.com/r/nano_tipper
+Send /u/playnano a PM on reddit, or post on https://reddit.com/r/nano_tips
 
 # Error Codes
 If a reddit tip is a reply to a reply, it's better to keep a short message with an error code.
 * 100 - You do not have an account -- Create an account by typing 'create' or by receiving a tip from another redditor.
-* 110 - You must specify an amount and a user, e.g. `send 1 nano_tipper`.
+* 110 - You must specify an amount and a user, e.g. `send 1 nano_tips`.
 * 120 - Could not read the tip amount -- use either a number or the word 'all'.
 * 130 - Tip amount is below program minimum -- This is to prevent spamming other redditors.
 * 140 - If using currency conversion, make sure there is no space. Example: `!ntip 0.5USD`.

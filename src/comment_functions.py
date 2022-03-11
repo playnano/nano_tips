@@ -5,10 +5,10 @@ from shared import (
     MYDB,
     MYCURSOR,
     DONATE_COMMANDS,
-    TIP_COMMANDS,
+    TIPBOT_COMMANDS,
     PROGRAM_MINIMUM,
     LOGGER,
-    TIP_BOT_USERNAME,
+    TIPBOT_USERNAME,
     EXCLUDED_REDDITORS,
     from_raw,
     to_raw,
@@ -95,13 +95,13 @@ def send_from_comment(message):
     if parsed_text[-3] in DONATE_COMMANDS:
         parsed_text = parsed_text[-3:]
     # don't do anything if the first word is a tip command or username
-    elif (parsed_text[0] in [f"/u/{TIP_BOT_USERNAME}", f"u/{TIP_BOT_USERNAME}"]) or (
-        parsed_text[0] in TIP_COMMANDS
+    elif (parsed_text[0] in [f"/u/{TIPBOT_USERNAME}", f"u/{TIPBOT_USERNAME}"]) or (
+        parsed_text[0] in TIPBOT_COMMANDS
     ):
         pass
     # if the second to last is a username or tip command, redifine parsed text
-    elif (parsed_text[-2] in [f"/u/{TIP_BOT_USERNAME}", f"u/{TIP_BOT_USERNAME}"]) or (
-        parsed_text[-2] in TIP_COMMANDS
+    elif (parsed_text[-2] in [f"/u/{TIPBOT_USERNAME}", f"u/{TIPBOT_USERNAME}"]) or (
+        parsed_text[-2] in TIPBOT_COMMANDS
     ):
         parsed_text = parsed_text[-2:]
 
@@ -120,7 +120,7 @@ def send_from_comment(message):
         response["status"] = 140
         return response
 
-    if parsed_text[0] in TIP_COMMANDS and len(parsed_text) <= 1:
+    if parsed_text[0] in TIPBOT_COMMANDS and len(parsed_text) <= 1:
         update_history_notes(entry_id, "no recipient or amount specified")
         response["status"] = 110
         return response
@@ -173,7 +173,7 @@ def send_from_comment(message):
     # if it's a normal send, pull the account author
     # we will distinguish users from donations by the presence of a private key
     if parsed_text[0] in (
-        TIP_COMMANDS + [f"/u/{TIP_BOT_USERNAME}", f"u/{TIP_BOT_USERNAME}"]
+        TIPBOT_COMMANDS + [f"/u/{TIPBOT_USERNAME}", f"u/{TIPBOT_USERNAME}"]
     ):
 
         response["status"] = 10

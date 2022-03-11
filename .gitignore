@@ -1,6 +1,8 @@
 praw.ini
-tipper.ini
-./src/praw.ini
-./src/tipper.ini
+config.ini
+
 log
-./src/log
+src/log
+.idea
+
+*__pycache__*

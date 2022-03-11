@@ -71,6 +71,11 @@ def auto_receive():
     private_keys = [str(result[2]) for result in myresult]
     MYDB.commit()
     pendings = get_pendings(addresses, threshold=to_raw(PROGRAM_MINIMUM))
+
+    # if there are no blocks pending, the node returns ""
+    if pendings['blocks'] == "":
+        return
+
     # get any pending blocks from our address
     for address, private_key in zip(addresses, private_keys):
         # allow 5 transactions to be received per cycle. If the bot gets transaction spammed, at least it won't be
@@ -125,8 +130,8 @@ def main_loop():
             inactivate_timer_new = time.time()
             return_transactions_new()
 
-        # run the receive script every 20 seconds
-        if time.time() - receive_timer > 20:
+        # run the receive script every 10 seconds
+        if time.time() - receive_timer > 10:
             receive_timer = time.time()
             auto_receive()
 
