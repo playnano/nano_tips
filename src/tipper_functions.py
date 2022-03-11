@@ -243,6 +243,15 @@ def send_pm(recipient, subject, body, bypass_opt_out=False, message_id=None):
         MYCURSOR.execute(sql, val)
         MYDB.commit()
 
+def parse_broccolish_amount(amount):
+    if amount == "":
+        return '0.133'
+    else:
+        if "🥦" in amount:
+            # there are more 🥦
+            return str((amount.count("🥦") + 1) * 0.133)
+        else:
+            return str(float(amount) * 0.133)
 
 def parse_raw_amount(parsed_text, username=None):
     """
@@ -288,11 +297,7 @@ def parse_raw_amount(parsed_text, username=None):
             )
     elif parsed_text[1][-1:].lower() == "🥦":
         # broccolish! -> 0.133 XNO
-        amount = parsed_text[1][:-1].lower()
-        if amount == "":
-            amount = '0.133'
-        else:
-            amount = str(float(amount) * 0.133)
+        amount = parse_broccolish_amount(parsed_text[1][:-1].lower())
     else:
         amount = parsed_text[1].lower()
 

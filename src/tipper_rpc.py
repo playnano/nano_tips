@@ -64,7 +64,7 @@ def work_generate(hash, dpow=False):
             return work_generate(hash)
         return results
     else:
-        data = {"action": "work_generate", "hash": hash}
+        data = {"action": "work_generate", "use_peers": "true", "hash": hash}
     results = perform_curl(data)
     return results
 

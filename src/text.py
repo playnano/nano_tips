@@ -71,7 +71,7 @@ There are also PM commands by [messaging](https://reddit.com/message/compose/?to
 ```balance``` Check your account balance.\n\n
 ```help``` Receive an in-depth help message.\n\n
 
-View your account on [the block explorer](https://nanocrawler.cc/explorer/account/%s).\n\n
+View your account on [the block explorer](https://nanolooker.com/account/%s).\n\n
 If you have any questions, please post at /r/nano_tips
 """
 
@@ -101,7 +101,7 @@ There are also PM commands by [messaging](https://reddit.com/message/compose/?to
 ```balance``` Check your account balance.\n\n
 ```help``` Receive an in-depth help message.\n\n
 
-View your account on Nano Crawler: https://nanocrawler.cc/explorer/account/%s\n\n
+View your account on [the block explorer](https://nanolooker.com/account/%s).\n\n
 If you have any questions, please post at /r/nano_tips
 """
 
@@ -109,7 +109,7 @@ NEW_TIP = """
 Somebody just tipped you %.4g XNO at your address %s. Your new account balance is:\n\n
 Available: %s XNO\n\n
 Receivable: %s XNO\n\n  
-Receivable nano will be received automatically. [Transaction on Nano Crawler](https://nanocrawler.cc/explorer/block/%s)\n\n
+Receivable nano will be received automatically. [Transaction on NanoLooker](https://nanolooker.com/block/%s)\n\n
 To turn off these notifications, reply with "silence yes".
 """
 
@@ -157,23 +157,18 @@ NAN = "'%s' didn't look like a number to me. If it is blank, there might be extr
 # full responses
 SEND_TEXT = {
     10: (
-        "Sent ```%.4g XNO``` to /u/%s -- [Transaction on Nano Crawler](https://nanoc"
-        "rawler.cc/explorer/block/%s)"
+        "Sent ```%.4g XNO``` to /u/%s -- [Transaction on NanoLooker](https://nanolooker.com/block/%s)"
     ),
     11: (
-        "Sent ```%.4g XNO``` to %s -- [Transaction on Nano Crawler](https://nanoc"
-        "rawler.cc/explorer/block/%s)"
+        "Sent ```%.4g XNO``` to %s -- [Transaction on NanoLooker](https://nanolooker.com/block/%s)"
     ),
     20: (
         "Creating a new account for /u/%s and "
-        "sending ```%.4g XNO```. [Transaction on Nano Crawler](https://nanocrawler.cc"
-        "/explorer/block/%s)"
+        "sending ```%.4g XNO```. [Transaction on NanoLooker](https://nanolooker.com/block/%s)"
     ),
-    30: "Sent ```%.4g XNO``` to address %s -- [Transaction on Nano Crawler](https://na"
-    "nocrawler.cc/explorer/block/%s)",
+    30: "Sent ```%.4g XNO``` to address %s -- [Transaction on NanoLooker](https://nanolooker.com/block/%s)",
     # 40: (
-    #     "Donated ```%.4g XNO``` to Nanocenter Project %s -- [Transaction on Nano Craw"
-    #     "ler](https://nanocrawler.cc/explorer/block/%s)"
+    #     "Donated ```%.4g XNO``` to Nanocenter Project %s -- [Transaction on NanoLooker](https://nanolooker.com/block/%s)"
     # ),
     100: (
         "You don't have an account yet. Please PM me with `create` in the body to "
@@ -203,19 +198,19 @@ SEND_TEXT = {
 # for subreddits who like minimal response, or 2nd level responses
 SEND_TEXT_MIN = {
     10: (
-        "^[Sent](https://nanocrawler.cc/explorer/block/%s) ^%s ^XNO ^to ^(/u/%s) ^- "
+        "^[Sent](https://nanolooker.com/block/%s) ^%s ^XNO ^to ^(/u/%s) ^- "
         "[^(Nano Tips)](https://github.com/playnano/nano_tips)"
     ),
     11: (
-        "^[Sent](https://nanocrawler.cc/explorer/block/%s) ^%s ^XNO ^to ^%s ^- [^(Na"
+        "^[Sent](https://nanolooker.com/block/%s) ^%s ^XNO ^to ^%s ^- [^(Na"
         "no Tipper)](https://github.com/playnano/nano_tips)"
     ),
     20: (
-        "^(Made a new account and )^[sent](https://nanocrawler.cc/explorer/block/%s) ^%s ^XNO ^to ^(/u/%s) ^- [^(Na"
+        "^(Made a new account and )^[sent](https://nanolooker.com/block/%s) ^%s ^XNO ^to ^(/u/%s) ^- [^(Na"
         "no Tipper)](https://github.com/playnano/nano_tips)"
     ),
     # 40: (
-    #     "^[Sent](https://nanocrawler.cc/explorer/block/%s) ^(%s XNO to NanoCenter Pro"
+    #     "^[Sent](https://nanolooker.com/block/%s) ^(%s XNO to NanoCenter Pro"
     #     "ject %s)"
     # ),
     100: (
@@ -261,7 +256,7 @@ SILENCE = {
 RECEIVE = {
     "balance": "At address %s, you currently have %s XNO available, and %s XNO "
     "ready to receive. If you have any ready to receive, create a new "
-    "message containing the word 'receive'\n\nhttps://nanocrawler.cc/explorer/account/%s",
+    "message containing the word 'receive'\n\nhttps://nanolooker.com/account/%s",
 }
 
 NOT_OPEN = (
@@ -272,14 +267,14 @@ NOT_OPEN = (
 ALREADY_EXISTS = (
     "It looks like you already have an account. In any case it is now "
     "**active**. Your nano address is %s."
-    "\n\nhttps://nanocrawler.cc/explorer/account/%s"
+    "\n\nhttps://nanolooker.com/account/%s"
 )
 
 BALANCE = (
     "At address %s:\n\nAvailable: %s XNO\n\nReady to receive: %s XNO\n\nNano "
     "will be received automatically unless the transaction is below "
     "0.0001 XNO."
-    "\n\nhttps://nanocrawler.cc/explorer/account/%s"
+    "\n\nhttps://nanolooker.com/account/%s"
 )
 
 # CROWD_FUNDING = {

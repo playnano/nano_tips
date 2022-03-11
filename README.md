@@ -1,5 +1,5 @@
 # Nano Tips
-Nano Tips is a reddit tipping service to easily give nano(XNO) to your favorite redditors, posts and comments! [Nano](https://nano.org) is a fast and feeless cryptocurrency that can be traded at numerous exchanges. Before using Nano Tips, please take a look at the [Terms of Service](https://github.com/playnano/nano_tips#terms-of-service)
+Nano Tips is a reddit tipping service to easily give nano (XNO) to your favorite redditors, posts and comments! [Nano](https://nano.org) is a fast and feeless cryptocurrency that can be traded at numerous exchanges. Before using Nano Tips, please take a look at the [Terms of Service](https://github.com/playnano/nano_tips#terms-of-service)
 
 Nano Tips is a fork of [Nano Tipper](https://github.com/danhitchcock/nano_tipper_z), which [was discontinued](https://www.reddit.com/r/nanocurrency/comments/t5uotr/reddit_tipbot_to_shut_down/) on March 7th, 2022.
 ### To get started with Nano Tips, either:
@@ -72,12 +72,21 @@ There are many other commands.
 'opt-out' - Disables your account and donates your remaining nano to the tipbot.
 'opt-in' - Reenables your account. Your nano may or may not still be available. 
 ```
-### Activate the TipBot on Your Subreddit
+## Broccolish! 🥦
+Nano Tips is broccolish! You can use 🥦 on your tips to send 0.133 XNO.
+
+    !ntips 🥦
+You can also specify different amounts to send more 🥦!
+
+    !ntips 5🥦
+    -or-
+    !ntips 🥦🥦🥦🥦🥦
+# Activate the TipBot on Your Subreddit
 If you are a moderator of a subreddit, and would like to tipping to your sub, use the `subreddit` command. For example, for me to activate tipping on my /r/nano_tips subreddit, I send a PM to the bot saying:
 
 `subreddit nano_tips activate`
 
-This will allow the bot to look for !ntip commands and respond to posts. 
+This will allow the bot to look for !ntips commands and respond to posts. 
 -or- If I don't want the bot to respond, but still want tips:
 
 `subreddit nano_tips activate silent`
