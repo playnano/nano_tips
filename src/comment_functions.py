@@ -4,7 +4,7 @@ import shared
 from shared import (
     MYDB,
     MYCURSOR,
-    DONATE_COMMANDS,
+    # DONATE_COMMANDS,
     TIPBOT_COMMANDS,
     PROGRAM_MINIMUM,
     LOGGER,
@@ -55,7 +55,7 @@ def send_from_comment(message):
     10 - sent to existing user
     20 - sent to new user
     30 - sent to address
-    40 - donated to nanocenter project
+    # 40 - donated to nanocenter project
     Tip not sent
     100 - sender account does not exist
     110 - Amount and/or recipient not specified
@@ -66,8 +66,8 @@ def send_from_comment(message):
     160 - insufficient funds
     170 - invalid address / recipient
     180 - below recipient minimum
-    200 - No Nanocenter Project specified
-    210 - Nanocenter Project does not exist
+    # 200 - No Nanocenter Project specified
+    # 210 - Nanocenter Project does not exist
 
 
 
@@ -91,11 +91,12 @@ def send_from_comment(message):
         subreddit=str(message.subreddit).lower(),
     )
 
-    # check if it's a donate command at the end
-    if parsed_text[-3] in DONATE_COMMANDS:
-        parsed_text = parsed_text[-3:]
+    # # check if it's a donate command at the end
+    # if parsed_text[-3] in DONATE_COMMANDS:
+    #     parsed_text = parsed_text[-3:]
+
     # don't do anything if the first word is a tip command or username
-    elif (parsed_text[0] in [f"/u/{TIPBOT_USERNAME}", f"u/{TIPBOT_USERNAME}"]) or (
+    if (parsed_text[0] in [f"/u/{TIPBOT_USERNAME}", f"u/{TIPBOT_USERNAME}"]) or (
         parsed_text[0] in TIPBOT_COMMANDS
     ):
         pass
@@ -125,10 +126,10 @@ def send_from_comment(message):
         response["status"] = 110
         return response
 
-    if parsed_text[0] in DONATE_COMMANDS and len(parsed_text) <= 2:
-        response["status"] = 110
-        update_history_notes(entry_id, "no recipient or amount specified")
-        return response
+    # if parsed_text[0] in DONATE_COMMANDS and len(parsed_text) <= 2:
+    #     response["status"] = 110
+    #     update_history_notes(entry_id, "no recipient or amount specified")
+    #     return response
 
     # pull sender account info
     sender_info = tipper_functions.account_info(response["username"])
@@ -188,21 +189,21 @@ def send_from_comment(message):
             response["status"] = 190
             return response
 
-    elif parsed_text[0] in DONATE_COMMANDS:
-        response["recipient"] = parsed_text[2]
-        results = tipper_functions.query_sql(
-            "FROM projects SELECT address WHERE project = %s", (parsed_text[2],)
-        )
-        if len(results) <= 0:
-            response["status"] = 210
-            return response
-
-        recipient_info = {
-            "username": parsed_text[2],
-            "address": results[0][0],
-            "minimum": -1,
-        }
-        response["status"] = 40
+    # elif parsed_text[0] in DONATE_COMMANDS:
+    #     response["recipient"] = parsed_text[2]
+    #     results = tipper_functions.query_sql(
+    #         "FROM projects SELECT address WHERE project = %s", (parsed_text[2],)
+    #     )
+    #     if len(results) <= 0:
+    #         response["status"] = 210
+    #         return response
+    #
+    #     recipient_info = {
+    #         "username": parsed_text[2],
+    #         "address": results[0][0],
+    #         "minimum": -1,
+    #     }
+    #     response["status"] = 40
     else:
         response["status"] = 999
         return response
@@ -224,7 +225,6 @@ def send_from_comment(message):
     )["hash"]
 
     # if the recipient is not active, add it to our return table.
-    # also, nanocenter projects won't have "active"
     if "active" in recipient_info.keys() and not recipient_info["active"]:
         add_return_record(
             username=sender_info["username"],
@@ -258,21 +258,21 @@ def send_from_comment(message):
         f"Sending Nano: {sender_info['address']} {sender_info['private_key']} {response['amount']} {recipient_info['address']} {recipient_info['username']}"
     )
 
-    # Update the sql and send the PMs if needed
-    # if there is no private key, it's a donation. No PMs to send
-    if "private_key" not in recipient_info.keys():
-        sql = "UPDATE history SET notes = %s, address = %s, username = %s, recipient_address = %s, amount = %s WHERE id = %s"
-        val = (
-            "sent to nanocenter address",
-            sender_info["address"],
-            sender_info["username"],
-            recipient_info["address"],
-            str(response["amount"]),
-            entry_id,
-        )
-        tipper_functions.exec_sql(sql, val)
-        response["status"] = 40
-        return response
+    # # Update the sql and send the PMs if needed
+    # # if there is no private key, it's a donation. No PMs to send
+    # if "private_key" not in recipient_info.keys():
+    #     sql = "UPDATE history SET notes = %s, address = %s, username = %s, recipient_address = %s, amount = %s WHERE id = %s"
+    #     val = (
+    #         "sent to nanocenter address",
+    #         sender_info["address"],
+    #         sender_info["username"],
+    #         recipient_info["address"],
+    #         str(response["amount"]),
+    #         entry_id,
+    #     )
+    #     tipper_functions.exec_sql(sql, val)
+    #     response["status"] = 40
+    #     return response
 
     # update the sql database and send
     sql = (

@@ -11,7 +11,7 @@ from shared import (
     TIPBOT_USERNAME,
     LOGGER,
     TIPBOT_COMMANDS,
-    DONATE_COMMANDS,
+    # DONATE_COMMANDS,
     TIPBOT_DONATION_ADDRESS,
     REDDIT,
     STATUS_POST_ID,
@@ -286,6 +286,13 @@ def parse_raw_amount(parsed_text, username=None):
                 "Could not reach conversion server.",
                 f"Currency {currency.upper()} not supported. Tip not sent.",
             )
+    elif parsed_text[1][-1:].lower() == "🥦":
+        # broccolish! -> 0.133 XNO
+        amount = parsed_text[1][:-1].lower()
+        if amount == "":
+            amount = '0.133'
+        else:
+            amount = str(float(amount) * 0.133)
     else:
         amount = parsed_text[1].lower()
 
@@ -302,8 +309,8 @@ def parse_raw_amount(parsed_text, username=None):
             raise TipError(
                 None,
                 f"Could not read your tip or send amount. Is '{amount}' a number, or is the "
-                "currency code valid? If you are trying to send Nano directly, omit "
-                "'Nano' from the amount (I will fix this in a future update).",
+                "currency code valid? If you are trying to send nano directly, omit "
+                "'nano' or 'xno' from the amount (I will fix this in a future update).",
             )
     return amount
 
@@ -317,11 +324,11 @@ def parse_action(action_item):
         return "replay"
     elif not allowed_request(action_item.author, 30, 5):
         return "ignore"
-    # check if it's a non-username post and if it has a tip or donate command
+    # check if it's a non-username post and if it has a tip # or donate command
     elif action_item.name.startswith("t1_") and bool(
         {parsed_text[0], parsed_text[-2], parsed_text[-3]}
         & (
-            set(TIPBOT_COMMANDS + DONATE_COMMANDS).union(
+            set(TIPBOT_COMMANDS).union(
                 {"/u/%s" % TIPBOT_USERNAME, "u/%s" % TIPBOT_USERNAME}
             )
         )

@@ -33,7 +33,7 @@ from shared import (
     EXCLUDED_REDDITORS,
     LOGGER,
     TIPBOT_OWNER,
-    DONATION_ADMINS,
+    # DONATION_ADMINS,
     to_raw,
     from_raw,
 )
@@ -110,15 +110,15 @@ def handle_message(message):
         LOGGER.info("converting")
         subject = text.SUBJECTS["convert"]
         response = handle_convert(message)
-    # nanocenter donation commands
-    elif command in ("project", "projects"):
-
-        subject = text.SUBJECTS["cf_projects"]
-        response = handle_projects(message)
-
-    elif command == "delete_project":
-        subject = text.SUBJECTS["cf_projects"]
-        response = handle_delete_project(message)
+    # # nanocenter donation commands
+    # elif command in ("project", "projects"):
+    #
+    #     subject = text.SUBJECTS["cf_projects"]
+    #     response = handle_projects(message)
+    #
+    # elif command == "delete_project":
+    #     subject = text.SUBJECTS["cf_projects"]
+    #     response = handle_delete_project(message)
 
     # a few administrative tasks
     elif command == ["restart"]:
@@ -920,49 +920,49 @@ def handle_convert(message):
     return text.CONVERT["success"] % (parsed_text[1], from_raw(amount))
 
 
-def handle_projects(message):
-    """
-    Handles creation and updates of crowdfunding (NanoCenter) projects
-    """
-    parsed_text = parse_text(str(message.body))
-    response = text.CROWD_FUNDING["projects"]
-    if (str(message.author).lower() in DONATION_ADMINS + TIPBOT_OWNER) and len(
-        parsed_text
-    ) > 2:
-        sql = "INSERT INTO projects (project, address) VALUES(%s, %s) ON DUPLICATE KEY UPDATE address=%s"
-        val = (parsed_text[1], parsed_text[2], parsed_text[2])
-        MYCURSOR.execute(sql, val)
-        MYDB.commit()
-    add_history_record(
-        username=str(message.author),
-        action="project",
-        comment_text=str(message.body)[:255],
-        comment_or_message="message",
-        comment_id=message.name,
-    )
-
-    sql = "SELECT project, address FROM projects"
-    MYCURSOR.execute(sql)
-    results = MYCURSOR.fetchall()
-    for result in results:
-        response += "%s %s  \n" % (result[0], result[1])
-    return response
-
-
-def handle_delete_project(message):
-    parsed_text = parse_text(str(message.body))
-    if (str(message.author) == TIPBOT_OWNER) and len(parsed_text) > 1:
-        sql = "DELETE FROM projects WHERE project=%s"
-        val = (parsed_text[1],)
-        MYCURSOR.execute(sql, val)
-        MYDB.commit()
-    response = text.CROWD_FUNDING["projects"]
-    sql = "SELECT project, address FROM projects"
-    MYCURSOR.execute(sql)
-    results = MYCURSOR.fetchall()
-    for result in results:
-        response += "%s %s  \n" % (result[0], result[1])
-    return response
+# def handle_projects(message):
+#     """
+#     Handles creation and updates of crowdfunding (NanoCenter) projects
+#     """
+#     parsed_text = parse_text(str(message.body))
+#     response = text.CROWD_FUNDING["projects"]
+#     if (str(message.author).lower() in DONATION_ADMINS + TIPBOT_OWNER) and len(
+#         parsed_text
+#     ) > 2:
+#         sql = "INSERT INTO projects (project, address) VALUES(%s, %s) ON DUPLICATE KEY UPDATE address=%s"
+#         val = (parsed_text[1], parsed_text[2], parsed_text[2])
+#         MYCURSOR.execute(sql, val)
+#         MYDB.commit()
+#     add_history_record(
+#         username=str(message.author),
+#         action="project",
+#         comment_text=str(message.body)[:255],
+#         comment_or_message="message",
+#         comment_id=message.name,
+#     )
+#
+#     sql = "SELECT project, address FROM projects"
+#     MYCURSOR.execute(sql)
+#     results = MYCURSOR.fetchall()
+#     for result in results:
+#         response += "%s %s  \n" % (result[0], result[1])
+#     return response
+#
+#
+# def handle_delete_project(message):
+#     parsed_text = parse_text(str(message.body))
+#     if (str(message.author) == TIPBOT_OWNER) and len(parsed_text) > 1:
+#         sql = "DELETE FROM projects WHERE project=%s"
+#         val = (parsed_text[1],)
+#         MYCURSOR.execute(sql, val)
+#         MYDB.commit()
+#     response = text.CROWD_FUNDING["projects"]
+#     sql = "SELECT project, address FROM projects"
+#     MYCURSOR.execute(sql)
+#     results = MYCURSOR.fetchall()
+#     for result in results:
+#         response += "%s %s  \n" % (result[0], result[1])
+#     return response
 
 
 def parse_recipient_username(recipient_text):

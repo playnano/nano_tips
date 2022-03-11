@@ -38,8 +38,8 @@ try:
     PROGRAM_MINIMUM = float(config["BOT"]["program_minimum"])
     RECIPIENT_MINIMUM = float(config["BOT"]["recipient_minimum"])
     TIPBOT_COMMANDS = config["BOT"]["commands"].split(",")
-    DONATE_COMMANDS = config["BOT"]["donate_commands"].split(",")
-    DONATION_ADMINS = config["BOT"]["donation_admins"]
+    # DONATE_COMMANDS = config["BOT"]["donate_commands"].split(",")
+    # DONATION_ADMINS = config["BOT"]["donation_admins"]
     CURRENCY = config["BOT"]["currency"]
     STATUS_POST_ID = config["BOT"]["status_post_id"]
 
@@ -78,8 +78,8 @@ except KeyError as e:
     PROGRAM_MINIMUM = 0.0001
     RECIPIENT_MINIMUM = 0.0001
     TIPBOT_COMMANDS = ["!ntips", "!nano_tips"]
-    DONATE_COMMANDS = ["!nanocenters"]
-    DONATION_ADMINS = []
+    # DONATE_COMMANDS = ["!nanocenters"]
+    # DONATION_ADMINS = []
     CURRENCY = "Nano"
     STATUS_POST_ID = ""
 
@@ -100,8 +100,8 @@ except KeyError as e:
 if ENVIRONMENT == 'development':
     for idx, command in enumerate(TIPBOT_COMMANDS):
         TIPBOT_COMMANDS[idx] = TIPBOT_COMMANDS[idx] + "_dev"
-    for idx, command in enumerate(DONATE_COMMANDS):
-        DONATE_COMMANDS[idx] = DONATE_COMMANDS[idx] + "_dev"
+    # for idx, command in enumerate(DONATE_COMMANDS):
+    #     DONATE_COMMANDS[idx] = DONATE_COMMANDS[idx] + "_dev"
 
 # only fails if no databases have been created
 try:
@@ -125,6 +125,9 @@ except mysql.connector.errors.DatabaseError:
     except mysql.connector.errors.DatabaseError:
         MYDB = None
         MYCURSOR = None
+
+if MYCURSOR != None:
+    MYCURSOR.execute("SET CHARACTER SET utf8mb4")
 
 try:
     REDDIT = praw.Reddit("nano_tips_bot")
@@ -173,6 +176,7 @@ except (AttributeError, mysql.connector.errors.ProgrammingError) as e:
 
 
 EXCLUDED_REDDITORS = [
+    "xno",
     "nano",
     "nanos",
     "btc",

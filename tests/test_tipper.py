@@ -31,7 +31,7 @@ import text
 import tipbot
 from tipbot import stream_comments_messages
 import pytest
-from shared import TIPBOT_COMMANDS, TIPBOT_USERNAME, DONATE_COMMANDS, to_raw
+from shared import TIPBOT_COMMANDS, TIPBOT_USERNAME, to_raw
 import message_functions
 from message_functions import handle_send
 import comment_functions
@@ -201,13 +201,13 @@ def mock_query_sql(sql, val=None):
             "not_tracked_sub": [],
         }
         return vals[val]
-    if sql == "FROM projects SELECT address WHERE project = %s":
-        val = val[0]
-        vals = {
-            "project_exists": [["address"]],
-            "project_does_not_exist": [],
-        }
-        return vals[val]
+    # if sql == "FROM projects SELECT address WHERE project = %s":
+    #     val = val[0]
+    #     vals = {
+    #         "project_exists": [["address"]],
+    #         "project_does_not_exist": [],
+    #     }
+    #     return vals[val]
 
     # return script
     if sql == "SELECT username FROM accounts WHERE active IS NOT TRUE":
@@ -333,7 +333,7 @@ def test_handle_send_from_PM(handle_send_from_message_mocks):
     10 - sent to existing user
     20 - sent to new user
     30 - sent to address
-    40 - donated to nanocenter project
+    # 40 - donated to nanocenter project
     Tip not sent
     100 - sender account does not exist
     110 - Amount and/or recipient not specified
@@ -345,8 +345,8 @@ def test_handle_send_from_PM(handle_send_from_message_mocks):
     170 - invalid address / recipient
     180 - below recipient minimum
     190 - user has opted out
-    200 - No Nanocenter Project specified
-    210 - Nanocenter Project does not exist
+    # 200 - No Nanocenter Project specified
+    # 210 - Nanocenter Project does not exist
     """
     # sender has no account
     message = RedditMessage("t4_5", "DNE", "", "send 0.01 poor")
@@ -424,7 +424,7 @@ def test_handle_send_from_PM(handle_send_from_message_mocks):
         text.make_response_text(message, response)
         == "It wasn't clear if you were trying to perform a currency conversion o"
         "r not. If so, be sure there is no space between the amount and currency. "
-        "Example: '!ntip 0.5USD'"
+        "Example: '!ntips 0.5USD'"
     )
 
     # send below user minimum
@@ -452,7 +452,7 @@ def test_handle_send_from_PM(handle_send_from_message_mocks):
         "username": "rich",
     }
     assert (
-        text.make_response_text(message, response) == "Program minimum is 0.0001 Nano."
+        text.make_response_text(message, response) == "Program minimum is 0.0001 XNO."
     )
 
     # send to invalid address/not a redditor
@@ -481,7 +481,7 @@ def test_handle_send_from_PM(handle_send_from_message_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "Sent ```0.01 Nano``` to /u/poor -- [Transaction on Nano Crawler](https:"
+        == "Sent ```0.01 XNO``` to /u/poor -- [Transaction on Nano Crawler](https:"
         "//nanocrawler.cc/explorer/block/success!)"
     )
 
@@ -497,7 +497,7 @@ def test_handle_send_from_PM(handle_send_from_message_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "Creating a new account for /u/dne and sending ```0.01 Nano```. [Transac"
+        == "Creating a new account for /u/dne and sending ```0.01 XNO```. [Transac"
         "tion on Nano Crawler](https://nanocrawler.cc/explorer/block/success!)"
     )
 
@@ -513,7 +513,7 @@ def test_handle_send_from_PM(handle_send_from_message_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "Sent ```0.01 Nano``` to address nano_valid -- [Transaction on Nano Cra"
+        == "Sent ```0.01 XNO``` to address nano_valid -- [Transaction on Nano Cra"
         "wler](https://nanocrawler.cc/explorer/block/success!)"
     )
 
@@ -543,7 +543,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     10 - sent to existing user
     20 - sent to new user
     30 - sent to address
-    40 - donated to nanocenter project
+    # 40 - donated to nanocenter project
     Tip not sent
     100 - sender account does not exist
     110 - Amount and/or recipient not specified
@@ -554,8 +554,8 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     160 - insufficient funds
     170 - invalid address / recipient
     180 - below recipient minimum
-    200 - No Nanocenter Project specified
-    210 - Nanocenter Project does not exist
+    # 200 - No Nanocenter Project specified
+    # 210 - Nanocenter Project does not exist
     """
 
     # sender has no account
@@ -615,7 +615,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
         "subreddit_status": "full",
     }
     assert (
-        text.make_response_text(message, response) == "Program minimum is 0.0001 Nano."
+        text.make_response_text(message, response) == "Program minimum is 0.0001 XNO."
     )
 
     # send to an Excluded redditor (i.e. a currency code)
@@ -632,7 +632,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
         text.make_response_text(message, response)
         == "It wasn't clear if you were trying to perform a currency conversion or "
         "not. If so, be sure there is no space between the amount and currency. "
-        "Example: '!ntip 0.5USD'"
+        "Example: '!ntips 0.5USD'"
     )
 
     # subreddit is not tracked
@@ -786,8 +786,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     assert (
         text.make_response_text(message, response)
         == "^[Sent](https://nanocrawler.cc/explorer/block/success!) ^0.01 ^Nano "
-        "^to ^(/u/poor) ^- [^(Nano Tips)](https://github.com/danhitchcock/nan"
-        "o_tipper_z)"
+        "^to ^(/u/poor) ^- [^(Nano Tips)](https://github.com/playnano/nano_tips)"
     )
 
     # send at end of message
@@ -864,74 +863,74 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "Sent ```0.01 Nano``` to /u/poor -- [Transaction on Nano Crawler](https"
+        == "Sent ```0.01 XNO``` to /u/poor -- [Transaction on Nano Crawler](https"
         "://nanocrawler.cc/explorer/block/success!)"
     )
 
-    # no amount specified
-    message = RedditMessage(
-        "t4_5", "rich", "", f"{DONATE_COMMANDS[0]} 1", subreddit="friendly_sub"
-    )
-    response = send_from_comment(message)
-    assert response == {
-        "status": 110,
-        "username": "rich",
-        "subreddit": "friendly_sub",
-        "subreddit_minimum": 0.001,
-        "subreddit_status": "full",
-    }
-    assert (
-        text.make_response_text(message, response)
-        == "You must specify an amount and a user, e.g. `send 1 nano_tips`."
-    )
+    # # no amount specified
+    # message = RedditMessage(
+    #     "t4_5", "rich", "", f"{DONATE_COMMANDS[0]} 1", subreddit="friendly_sub"
+    # )
+    # response = send_from_comment(message)
+    # assert response == {
+    #     "status": 110,
+    #     "username": "rich",
+    #     "subreddit": "friendly_sub",
+    #     "subreddit_minimum": 0.001,
+    #     "subreddit_status": "full",
+    # }
+    # assert (
+    #     text.make_response_text(message, response)
+    #     == "You must specify an amount and a user, e.g. `send 1 nano_tips`."
+    # )
 
-    # send to non-existent nanocenter project
-    message = RedditMessage(
-        "t4_5",
-        "rich",
-        "",
-        f"{DONATE_COMMANDS[0]} 0.01 project_does_not_exist",
-        subreddit="friendly_sub",
-    )
-    response = send_from_comment(message)
-    assert response == {
-        "amount": 10000000000000000000000000000,
-        "recipient": "project_does_not_exist",
-        "status": 210,
-        "subreddit": "friendly_sub",
-        "subreddit_minimum": 0.001,
-        "username": "rich",
-        "subreddit_status": "full",
-    }
-    assert (
-        text.make_response_text(message, response)
-        == "No Nanocenter project named project_does_not_exist was found."
-    )
-
-    # nanocenter project does exist
-    message = RedditMessage(
-        "t4_5",
-        "rich",
-        "",
-        f"{DONATE_COMMANDS[0]} 0.01 project_exists",
-        subreddit="friendly_sub",
-    )
-    response = send_from_comment(message)
-    assert response == {
-        "amount": 10000000000000000000000000000,
-        "hash": "success!",
-        "status": 40,
-        "subreddit": "friendly_sub",
-        "subreddit_minimum": 0.001,
-        "username": "rich",
-        "recipient": "project_exists",
-        "subreddit_status": "full",
-    }
-    assert (
-        text.make_response_text(message, response)
-        == "Donated ```0.01 Nano``` to Nanocenter Project project_exists -- [Tran"
-        "saction on Nano Crawler](https://nanocrawler.cc/explorer/block/success!)"
-    )
+    # # send to non-existent nanocenter project
+    # message = RedditMessage(
+    #     "t4_5",
+    #     "rich",
+    #     "",
+    #     f"{DONATE_COMMANDS[0]} 0.01 project_does_not_exist",
+    #     subreddit="friendly_sub",
+    # )
+    # response = send_from_comment(message)
+    # assert response == {
+    #     "amount": 10000000000000000000000000000,
+    #     "recipient": "project_does_not_exist",
+    #     "status": 210,
+    #     "subreddit": "friendly_sub",
+    #     "subreddit_minimum": 0.001,
+    #     "username": "rich",
+    #     "subreddit_status": "full",
+    # }
+    # assert (
+    #     text.make_response_text(message, response)
+    #     == "No Nanocenter project named project_does_not_exist was found."
+    # )
+    #
+    # # nanocenter project does exist
+    # message = RedditMessage(
+    #     "t4_5",
+    #     "rich",
+    #     "",
+    #     f"{DONATE_COMMANDS[0]} 0.01 project_exists",
+    #     subreddit="friendly_sub",
+    # )
+    # response = send_from_comment(message)
+    # assert response == {
+    #     "amount": 10000000000000000000000000000,
+    #     "hash": "success!",
+    #     "status": 40,
+    #     "subreddit": "friendly_sub",
+    #     "subreddit_minimum": 0.001,
+    #     "username": "rich",
+    #     "recipient": "project_exists",
+    #     "subreddit_status": "full",
+    # }
+    # assert (
+    #     text.make_response_text(message, response)
+    #     == "Donated ```0.01 Nano``` to Nanocenter Project project_exists -- [Tran"
+    #     "saction on Nano Crawler](https://nanocrawler.cc/explorer/block/success!)"
+    # )
 
 
 # Test the streaming of comments and methods
@@ -1014,7 +1013,7 @@ def test_return_transactions(monkeypatch):
                 "one",
                 "two",
                 500000000000000000000000000,
-                "nano_3jy9954gncxbhuieujc3pg5t1h36e7tyqfapw1y6zukn9y1g6dj5xr7r6pij",
+                "nano_3pnanopr3d5g7o45zh3nmdkqpaqxhhp3mw14nzr41smjz8xsrfyhtf9xac77",
             ),
             {},
         ],

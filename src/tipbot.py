@@ -130,8 +130,8 @@ def main_loop():
             inactivate_timer_new = time.time()
             return_transactions_new()
 
-        # run the receive script every 10 seconds
-        if time.time() - receive_timer > 10:
+        # run the receive script every 2 seconds
+        if time.time() - receive_timer > 2:
             receive_timer = time.time()
             auto_receive()
 

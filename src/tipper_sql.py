@@ -30,6 +30,13 @@ def init_history():
         ")"
     )
     MYDB.commit()
+    # allow emojis, like broccoli!
+    MYCURSOR.execute(
+        "ALTER TABLE history "
+        "CONVERT TO CHARACTER SET utf8mb4 "
+        "COLLATE utf8mb4_unicode_ci "
+    )
+    MYDB.commit()
 
 
 def init_returns():
@@ -60,6 +67,13 @@ def init_messages():
         "message VARCHAR(5000), "
         "message_id VARCHAR(5000)"
         ")"
+    )
+    MYDB.commit()
+    # allow emojis, like broccoli!
+    MYCURSOR.execute(
+        "ALTER TABLE messages "
+        "CONVERT TO CHARACTER SET utf8mb4 "
+        "COLLATE utf8mb4_unicode_ci "
     )
     MYDB.commit()
 
@@ -94,16 +108,56 @@ def init_subreddits():
         ")"
     )
     MYDB.commit()
-
-
-def init_projects():
+    # populate nano_tipper subreddits
     MYCURSOR.execute(
-        "CREATE TABLE projects ("
-        "project VARCHAR(255) PRIMARY KEY, "
-        "address VARCHAR(255)"
-        ")"
+        "INSERT INTO subreddits (subreddit, status, minimum) "
+        "VALUES "
+        "('altstreetbets', 'full', '0.0001'), "
+        "('ananos', 'full', '0.0001'), "
+        "('argentina', 'full', '0.001'), "
+        "('assistance', 'full', '0.001'), "
+        "('cryptocurrency', 'silent', '0.001'), "
+        "('Cryptocurrency_Daily', 'full', '0.001'), "
+        "('cryptocurrency247', 'full', '0.001'), "
+        "('digitalmoney', 'full', '0.001'), "
+        "('do_not_post_here', 'silent', '0.001'), "
+        "('extracrypto', 'full', '0.0001'), "
+        "('investment', 'full', '0.01'), "
+        "('jobsfornano', 'full', '0.0001'), "
+        "('kriptovaluta', 'full', '0.0001'), "
+        "('millionairemakers', 'full', '0.001'), "
+        "('nanocirclejerk', 'full', '0.001'), "
+        "('nanocurrency', 'full', '0.001'), "
+        "('nanocurrencybeginners', 'full', '0.0001'), "
+        "('nanogonewild', 'full', '0.0001'), "
+        "('nanoism', 'full', '0.001'), "
+        "('nanotipjar', 'full', '0.0001'), "
+        "('nano_tips', 'full', '0.0001'), "
+        "('nano_tipper', 'full', '0.0001'), "
+        "('nanotrade', 'full', '0.001'), "
+        "('nudes4nano', 'full', '0.0001'), "
+        "('nyano', 'full', '0.0001'), "
+        "('pikaofficial', 'full', '0.0001'), "
+        "('subtleasianswingers', 'full', '0.0001'), "
+        "('swingersr4r', 'full', '0.0001'), "
+        "('teenagers', 'full', '0.001'), "
+        "('teenagersnew', 'full', '0.001'), "
+        "('ukcrypto', 'full', '0.0001'), "
+        "('wenano', 'full', '0.0001'), "
+        "('worldofkamikaze', 'full', '0.0001'), "
+        "('zune', 'full', '0.0001')"
     )
     MYDB.commit()
+
+
+# def init_projects():
+#     MYCURSOR.execute(
+#         "CREATE TABLE projects ("
+#         "project VARCHAR(255) PRIMARY KEY, "
+#         "address VARCHAR(255)"
+#         ")"
+#     )
+#     MYDB.commit()
 
 
 def add_history_record(
@@ -425,4 +479,4 @@ def init_tables():
     init_messages()
     init_accounts()
     init_subreddits()
-    init_projects()
+    # init_projects()
