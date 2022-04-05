@@ -45,6 +45,7 @@ def handle_message(message):
     subject = "Nano Tips"
     parsed_text = parse_text(str(message.body))
     command = parsed_text[0].lower()
+    message_author = str(message.author)
 
     # ignore _dev commands if in production and ignore non _dev commands if in development
     if ENVIRONMENT == 'production' and command.endswith("_dev"):
@@ -61,6 +62,13 @@ def handle_message(message):
     # only activate if it's not an opt-out command
     if command != "opt-out":
         activate(message.author)
+
+    # OLD_TIPPER
+    using_old_tipper = tipper_functions.old_tipper_balance(message_author) > 0
+    if using_old_tipper and command in \
+            ["balance", "address", "minimum", "percentage", "percent", "send", "withdraw", "silence"] and \
+            tipper_functions.account_info(message_author) is None:
+        tipper_functions.add_new_account(message_author)
 
     # normal commands
     if command in ["help", "!help"]:
@@ -154,10 +162,9 @@ def handle_message(message):
         subject = text.SUBJECTS["not_recognized"]
         response = text.COMMAND_NOT_RECOGNIZED
 
-    message_recipient = str(message.author)
     message_text = response + COMMENT_FOOTER
     send_pm(
-        message_recipient,
+        message_author,
         subject,
         message_text,
         bypass_opt_out=True,
@@ -165,14 +172,14 @@ def handle_message(message):
     )
 
     # OLD_TIPPER
-    if tipper_functions.old_tipper_balance(message_recipient) > 0:
+    if using_old_tipper:
         # recipient has funds on the old bot
         # sending reminder to move funds out of the old bot
         subject = text.SUBJECTS["old_tipper_reminder"]
-        recipient_info = tipper_functions.account_info(message_recipient)
+        recipient_info = tipper_functions.account_info(message_author)
         if recipient_info is not None:
             message_text = text.OLD_TIPPER_REMINDER.format(address=recipient_info["address"]) + COMMENT_FOOTER
-            send_pm(message_recipient, subject, message_text, bypass_opt_out=True, message_id=message.name)
+            send_pm(message_author, subject, message_text, bypass_opt_out=True, message_id=message.name)
 
 
 def handle_percentage(message):
