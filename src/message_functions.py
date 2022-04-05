@@ -170,8 +170,9 @@ def handle_message(message):
         # sending reminder to move funds out of the old bot
         subject = text.SUBJECTS["old_tipper_reminder"]
         recipient_info = tipper_functions.account_info(message_recipient)
-        message_text = text.OLD_TIPPER_REMINDER.format(address=recipient_info["address"]) + COMMENT_FOOTER
-        send_pm(message_recipient, subject, message_text, bypass_opt_out=True, message_id=message.name)
+        if recipient_info is not None:
+            message_text = text.OLD_TIPPER_REMINDER.format(address=recipient_info["address"]) + COMMENT_FOOTER
+            send_pm(message_recipient, subject, message_text, bypass_opt_out=True, message_id=message.name)
 
 
 def handle_percentage(message):
