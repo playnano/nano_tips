@@ -234,7 +234,7 @@ def send_pm(recipient, subject, body, bypass_opt_out=False, message_id=None):
         MYDB.commit()
 
     # if the user has opted in, or if there is an override to send the PM even if they have not
-    if opt_in or not bypass_opt_out:
+    if opt_in:
         sql = (
             "INSERT INTO messages (username, subject, message, message_id)"
             " VALUES (%s, %s, %s, %s)"
@@ -295,7 +295,11 @@ def parse_raw_amount(parsed_text, username=None):
                 "Could not reach conversion server.",
                 f"Currency {currency.upper()} not supported. Tip not sent.",
             )
-    elif parsed_text[1][-1:].lower() == "🥦":
+    elif parsed_text[1][0].lower() == 'ӿ':
+        amount = parsed_text[1][1:].lower()
+    elif parsed_text[1][-1].lower() == 'ӿ':
+        amount = parsed_text[1][:-1].lower()
+    elif parsed_text[1][-1].lower() == "🥦":
         # broccolish! -> 0.133 XNO
         amount = parse_broccolish_amount(parsed_text[1][:-1].lower())
     else:
@@ -338,7 +342,7 @@ def parse_action(action_item):
             )
         )
     ):
-        LOGGER.info(f"Comment: {action_item.author} - " f"{action_item.body[:20]}")
+        LOGGER.info(f"Comment: {action_item.author} - " f"{repr(action_item.body[:50])}")
         return "comment"
     # otherwise, lets parse the message. t4 means either a message or username mention
     elif action_item.name.startswith("t4_"):
@@ -347,14 +351,14 @@ def parse_action(action_item):
             # check if its a send, otherwise ignore
             if action_item.body.startswith(f"send{'_dev' if ENVIRONMENT == 'development' else ''} 0.001 "):
                 LOGGER.info(
-                    f"Faucet Tip: {action_item.author} - {action_item.body[:20]}"
+                    f"Faucet Tip: {action_item.author} - {repr(action_item.body[:50])}"
                 )
                 return "faucet_tip"
             else:
                 return "ignore"
         # otherwise, it's a normal message
         else:
-            LOGGER.info(f"Comment: {action_item.author} - " f"{action_item.body[:20]}")
+            LOGGER.info(f"Message: {action_item.author} - " f"{repr(action_item.body[:50])}")
             return "message"
     return None
 
@@ -653,6 +657,9 @@ def return_transactions():
 
 
 def update_status_message():
+
+    if ENVIRONMENT != 'production': return
+
     subreddits = list_subreddits()
     body = "Current Subreddits: \n\n"
     body += "\n".join(
@@ -660,3 +667,19 @@ def update_status_message():
     )
     submission = REDDIT.submission(STATUS_POST_ID)
     submission.edit(body)
+
+# OLD_TIPPER
+def old_tipper_balance(username):
+
+    try:
+        r = requests.get(f"http://reddittipbot.com/getaccount?user={username}")
+    except requests.exceptions.RequestException as e:
+        LOGGER.error(f"Connection to 'http://reddittipbot.com' failed: {e}")
+        return 0
+
+    response = json.loads(r.text)
+    if response['account'] != 'Error: No account found for redditor.':
+        balance = check_balance(response['account'])
+        return from_raw(balance[0])
+
+    return 0

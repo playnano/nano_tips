@@ -27,4 +27,4 @@ while True:
         MYCURSOR.execute(sql, val)
         MYDB.commit()
 
-    sleep(3)
+    sleep(2)

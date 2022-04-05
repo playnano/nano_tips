@@ -1,7 +1,7 @@
 # Nano Tips
 Nano Tips is a reddit tipping service to easily give nano (XNO) to your favorite redditors, posts and comments! [Nano](https://nano.org) is a fast and feeless cryptocurrency that can be traded at numerous exchanges. Before using Nano Tips, please take a look at the [Terms of Service](https://github.com/playnano/nano_tips#terms-of-service)
 
-Nano Tips is a fork of [Nano Tipper](https://github.com/danhitchcock/nano_tipper_z), which [was discontinued](https://www.reddit.com/r/nanocurrency/comments/t5uotr/reddit_tipbot_to_shut_down/) on March 7th, 2022.
+**Nano Tips is a fork of the old tipbot [Nano Tipper](https://github.com/danhitchcock/nano_tipper_z), which [was discontinued](https://www.reddit.com/r/nanocurrency/comments/t5uotr/reddit_tipbot_to_shut_down/) on March 7th, 2022.** If you had funds on the old tipbot, you will have to move them to this new bot. This is not an automatic process.
 ### To get started with Nano Tips, either:
 A) **Create an account** by [sending a message](https://reddit.com/message/compose/?to=nano_tips&subject=hi&message=create) to /u/nano_tips with 'create' or 'register' in the message body. You will receive a nano address, to which you can add nano\*. You will receive a 0.001 XNO tip for registering! Also, try any of the faucets at [Nano Links](https://nanolinks.info/#faucets-free-nano)
 
@@ -40,12 +40,12 @@ If the subreddit is a [friendly subreddit](https://www.reddit.com/r/nano_tips/co
 
 Nano Tips also works by PM (NOT CHAT). [Send a message](https://reddit.com/message/compose/?to=nano_tips&subject=hi&message=type_command_here) to /u/nano_tips for a variety of actions.
 
-To send 0.1 XNO to redditor_username, include this text in the message body:
+To send 0.1 XNO to reddit_user, include this text in the message body:
 
-    send 0.1 /u/redditor_username
+    send 0.1 /u/reddit_user
 -or-
 
-    send 0.1 redditor_username
+    send 0.1 reddit_user
 
 To send 0.1 XNO to nano\_3pnanopr3d5g7o45zh3nmdkqpaqxhhp3mw14nzr41smjz8xsrfyhtf9xac77, include this text in the message body:
 
@@ -146,7 +146,8 @@ If a reddit tip is a reply to a reply, it's better to keep a short message with 
 * 120 - Could not read the tip amount -- use either a number or the word 'all'.
 * 130 - Tip amount is below program minimum -- This is to prevent spamming other redditors.
 * 140 - If using currency conversion, make sure there is no space. Example: `!ntips 0.5USD`.
-* 150 - You are likely attempting to tip in an unfamiliar sub. The minimum is 1 XNO.
-* 160 - You have insufficient funds.
-* 180 - Tip amount is below recipients specified tip minimum.
+* 150 - You are likely attempting to tip in an unfamiliar sub. The minimum is 1USD in nano.
+* 160 - You have insufficient funds. _(If you had an account with the old tipbot, you'll receive a message to help you move your funds to the new bot.)_
+* 170 - The recipient is neither a redditor nor a valid address.
+* 180 - Tip amount is below the recipient's specified tip minimum.
 * 190 - The recipient has disabled tipping for their account.

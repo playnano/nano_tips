@@ -1,5 +1,6 @@
 import sys
 from datetime import datetime
+from time import sleep
 import tipper_functions
 import text
 from tipper_functions import (
@@ -41,6 +42,7 @@ from shared import (
 
 def handle_message(message):
     response = "not activated"
+    subject = "Nano Tips"
     parsed_text = parse_text(str(message.body))
     command = parsed_text[0].lower()
 
@@ -148,7 +150,10 @@ def handle_message(message):
             comment_or_message="message",
             comment_id=message.name,
         )
-        return None
+        LOGGER.info("not_recognized")
+        subject = text.SUBJECTS["not_recognized"]
+        response = text.COMMAND_NOT_RECOGNIZED
+
     message_recipient = str(message.author)
     message_text = response + COMMENT_FOOTER
     send_pm(
@@ -158,6 +163,15 @@ def handle_message(message):
         bypass_opt_out=True,
         message_id=message.name,
     )
+
+    # OLD_TIPPER
+    if tipper_functions.old_tipper_balance(message_recipient) > 0:
+        # recipient has funds on the old bot
+        # sending reminder to move funds out of the old bot
+        subject = text.SUBJECTS["old_tipper_reminder"]
+        recipient_info = tipper_functions.account_info(message_recipient)
+        message_text = text.OLD_TIPPER_REMINDER.format(address=recipient_info["address"]) + COMMENT_FOOTER
+        send_pm(message_recipient, subject, message_text, bypass_opt_out=True, message_id=message.name)
 
 
 def handle_percentage(message):
@@ -176,12 +190,12 @@ def handle_percentage(message):
     # check that the minimum is a number
 
     if parsed_text[1].lower() == "nan" or ("inf" in parsed_text[1].lower()):
-        response = text.NAN
+        response = text.NAN.format(parsed_text[1])
         return response
     try:
         amount = float(parsed_text[1])
     except:
-        response = text.NAN % parsed_text[1]
+        response = text.NAN.format(parsed_text[1])
         return response
 
     # check that it's greater than 0.01
@@ -250,11 +264,9 @@ def handle_balance(message):
     if len(result) > 0:
         results = check_balance(result[0][0])
 
-        response = text.BALANCE % (
-            result[0][0],
-            from_raw(results[0]),
-            from_raw(results[1]),
-            result[0][0],
+        response = text.BALANCE.format(
+            address=result[0][0],
+            balance=from_raw(results[0])
         )
 
         return response
@@ -281,7 +293,7 @@ def handle_create(message):
     result = MYCURSOR.fetchall()
     if len(result) is 0:
         address = tipper_functions.add_new_account(username)["address"]
-        response = WELCOME_CREATE % (address, address)
+        response = WELCOME_CREATE.format(address=address)
         # I will keep the welcome bonus for now, but might remove it later
         message_recipient = TIPBOT_USERNAME
         subject = "send"
@@ -294,7 +306,7 @@ def handle_create(message):
         # reddit.redditor(message_recipient).message(subject, message_text)
 
     else:
-        response = text.ALREADY_EXISTS % (result[0][0], result[0][0])
+        response = text.ALREADY_EXISTS.format(address=result[0][0])
     return response
 
 
@@ -323,12 +335,12 @@ def handle_history(message):
     # if there are more than 2 words, one of the words is a number for the number of records
     if len(parsed_text) >= 2:
         if parsed_text[1].lower() == "nan" or ("inf" in parsed_text[1].lower()):
-            response = text.NAN
+            response = text.NAN.format(parsed_text[1])
             return response
         try:
             num_records = int(parsed_text[1])
         except:
-            response = text.NAN
+            response = text.NAN.format(parsed_text[1])
             return response
 
     # check that it's greater than 50
@@ -457,17 +469,17 @@ def handle_minimum(message):
     # check that the minimum is a number
 
     if parsed_text[1].lower() == "nan" or ("inf" in parsed_text[1].lower()):
-        response = text.NAN
+        response = text.NAN.format(parsed_text[1])
         return response
     try:
         amount = float(parsed_text[1])
     except:
-        response = text.NAN % parsed_text[1]
+        response = text.NAN.format(parsed_text[1])
         return response
 
     # check that it's greater than 0.01
     if to_raw(amount) < to_raw(PROGRAM_MINIMUM):
-        response = text.MINIMUM["below_program"] % PROGRAM_MINIMUM
+        response = text.MINIMUM["below_program"].format(PROGRAM_MINIMUM)
         return response
 
     # check if the user is in the database
@@ -492,7 +504,7 @@ def handle_minimum(message):
         val = (str(to_raw(amount)), username)
         MYCURSOR.execute(sql, val)
         MYDB.commit()
-        response = text.MINIMUM["set_min"] % amount
+        response = text.MINIMUM["set_min"].format(amount)
         return response
     else:
         add_history_record(
@@ -502,50 +514,6 @@ def handle_minimum(message):
             amount=to_raw(amount),
             comment_id=message.name,
             comment_text=str(message.body)[:255],
-        )
-        response = text.NOT_OPEN
-        return response
-
-
-def handle_receive(message):
-    """
-
-    :param message:
-    :return:
-    """
-    message_time = datetime.utcfromtimestamp(message.created_utc)
-    username = str(message.author)
-    # find any accounts associated with the redditor
-    sql = "SELECT address, private_key FROM accounts WHERE username=%s"
-    val = (username,)
-    MYCURSOR.execute(sql, val)
-    result = MYCURSOR.fetchall()
-    if len(result) > 0:
-        address = result[0][0]
-        open_or_receive(address, result[0][1])
-        balance = check_balance(address)
-        add_history_record(
-            username=username,
-            action="receive",
-            reddit_time=message_time.strftime("%Y-%m-%d %H:%M:%S"),
-            address=address,
-            comment_id=message.name,
-            comment_or_message="message",
-        )
-        response = text.RECEIVE["balance"] % (
-            address,
-            from_raw(balance[0]),
-            from_raw(balance[1]),
-            address,
-        )
-        return response
-    else:
-        add_history_record(
-            username=username,
-            action="receive",
-            reddit_time=message_time.strftime("%Y-%m-%d %H:%M:%S"),
-            comment_id=message.name,
-            comment_or_message="message",
         )
         response = text.NOT_OPEN
         return response
@@ -617,20 +585,20 @@ def handle_subreddit(message):
         message.author not in REDDIT.subreddit(parsed_text[1]).moderator()
         and message.author != TIPBOT_OWNER
     ):
-        return text.SUBREDDIT["not_mod"] % parsed_text[1]
+        return text.SUBREDDIT["not_mod"].format(subreddit=parsed_text[1])
 
     # change the subreddit minimum
     if parsed_text[2] in ["minimum", "min"]:
         try:
             float(parsed_text[3])
         except:
-            return text.NAN % parsed_text[3]
+            return text.NAN.format(parsed_text[3])
         sql = "UPDATE subreddits SET minimum = %s WHERE subreddit = %s"
         val = (parsed_text[3], parsed_text[1])
         MYCURSOR.execute(sql, val)
         MYDB.commit()
 
-        return text.SUBREDDIT["minimum"] % (parsed_text[1], parsed_text[3])
+        return text.SUBREDDIT["minimum"].format(subreddit=parsed_text[1], minimum=parsed_text[3])
 
     if parsed_text[2] in ("disable", "deactivate"):
         # disable the bot
@@ -641,7 +609,7 @@ def handle_subreddit(message):
             MYDB.commit()
         except:
             pass
-        return text.SUBREDDIT["deactivate"] % parsed_text[1]
+        return text.SUBREDDIT["deactivate"].format(subreddit=parsed_text[1])
 
     if parsed_text[2] in ("enable", "activate"):
         # if it's at least 4 words, set the status to that one
@@ -660,7 +628,7 @@ def handle_subreddit(message):
             val = (status, parsed_text[1])
             MYCURSOR.execute(sql, val)
             MYDB.commit()
-        return text.SUBREDDIT["activate"] % status
+        return text.SUBREDDIT["activate"].format(status=status)
 
     # only 4 word commands after this point
     if len(parsed_text) < 4:
@@ -830,33 +798,39 @@ def handle_send(message):
     if response["status"] == 20:
         subject = text.SUBJECTS["first_tip"]
         message_text = (
-            WELCOME_TIP
-            % (
-                from_raw(response["amount"]),
-                recipient_info["address"],
-                recipient_info["address"],
-            )
+            WELCOME_TIP.format(amount=from_raw(response["amount"]), address=recipient_info["address"])
             + COMMENT_FOOTER
         )
         send_pm(recipient_info["username"], subject, message_text)
-        return response
+
     else:
         if not recipient_info["silence"]:
+            # we'll sleep here to give time for the transaction to be confirmed by the network
+            # so that the check balance returns the correct balance without having to "include_only_confirmed"
+            sleep(2)
             receiving_new_balance = check_balance(recipient_info["address"])
             subject = text.SUBJECTS["new_tip"]
+            balance = from_raw(receiving_new_balance[0])+from_raw(receiving_new_balance[1])
             message_text = (
-                NEW_TIP
-                % (
-                    from_raw(response["amount"]),
-                    recipient_info["address"],
-                    from_raw(receiving_new_balance[0]),
-                    from_raw(receiving_new_balance[1]),
-                    response["hash"],
+                NEW_TIP.format(
+                    amount=from_raw(response["amount"]),
+                    address=recipient_info["address"],
+                    balance=balance,
+                    hash=response["hash"]
                 )
                 + COMMENT_FOOTER
             )
             send_pm(recipient_info["username"], subject, message_text)
-        return response
+
+    # OLD_TIPPER
+    if tipper_functions.old_tipper_balance(recipient_info["username"]) > 0:
+        # recipient has funds on the old bot
+        # sending reminder to move funds out of the old bot
+        subject = text.SUBJECTS["old_tipper_reminder"]
+        message_text = text.OLD_TIPPER_REMINDER.format(address=recipient_info["address"]) + text.COMMENT_FOOTER
+        send_pm(recipient_info["username"], subject, message_text)
+
+    return response
 
 
 def handle_opt_out(message):
@@ -916,8 +890,8 @@ def handle_convert(message):
     try:
         amount = parse_raw_amount(parsed_text)
     except TipError:
-        return text.SEND_TEXT[120] % parsed_text[1]
-    return text.CONVERT["success"] % (parsed_text[1], from_raw(amount))
+        return text.SEND_TEXT[120].format(amount_text=parsed_text[1])
+    return text.CONVERT["success"].format(parsed_text[1].upper(), from_raw(amount))
 
 
 # def handle_projects(message):

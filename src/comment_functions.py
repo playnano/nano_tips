@@ -1,4 +1,5 @@
 import datetime
+from time import sleep
 import text
 import shared
 from shared import (
@@ -23,7 +24,7 @@ from tipper_functions import (
 )
 
 from tipper_sql import add_history_record, add_return_record
-from tipper_rpc import send
+import tipper_rpc
 import tipper_functions
 
 # handles tip commands on subreddits
@@ -40,12 +41,28 @@ def handle_comment(message):
         else:
             subject = text.SUBJECTS["failure"]
         message_text = response_text + text.COMMENT_FOOTER
-        sql = "INSERT INTO messages (username, subject, message) VALUES (%s, %s, %s)"
-        val = (message_recipient, subject, message_text)
-        MYCURSOR.execute(sql, val)
-        MYDB.commit()
+        send_pm(message_recipient, subject, message_text, True)
     else:
         message.reply(response_text + text.COMMENT_FOOTER)
+
+    # OLD_TIPPER
+    if response["status"] == 160 and response.get('old_tipper'):
+        # user _ didn't have an account, and it was created - or - has 0 balance _AND_ user has balance in old tipbot _
+        # we have to send a message about the new tipper
+
+        subject = text.SUBJECTS["old_tipper"]
+        sender_info = tipper_functions.account_info(response["username"])
+        message_text = text.OLD_TIPPER.format(address=sender_info["address"]) + text.COMMENT_FOOTER
+        send_pm(str(message.author), subject, message_text, True)
+
+    elif tipper_functions.old_tipper_balance(response["username"]) > 0:
+        # user tipped someone from the new bot, with funds on the old bot
+        # sending reminder to move funds out of the old bot
+
+        subject = text.SUBJECTS["old_tipper_reminder"]
+        sender_info = tipper_functions.account_info(response["username"])
+        message_text = text.OLD_TIPPER_REMINDER.format(address=sender_info["address"])  + text.COMMENT_FOOTER
+        send_pm(str(message.author), subject, message_text, True)
 
 
 def send_from_comment(message):
@@ -62,7 +79,7 @@ def send_from_comment(message):
     120 - could not parse send amount
     130 - below program minimum
     140 - currency code issue
-    150 - below 1 nano for untracked sub
+    150 - below 1USD in nano for untracked sub
     160 - insufficient funds
     170 - invalid address / recipient
     180 - below recipient minimum
@@ -134,8 +151,19 @@ def send_from_comment(message):
     # pull sender account info
     sender_info = tipper_functions.account_info(response["username"])
     if not sender_info:
-        update_history_notes(entry_id, "user does not exist")
-        response["status"] = 100
+        # OLD_TIPPER
+        # the user doesn't have an account with nano_tips,
+        # let's check if he has an account with balance on nano_tipper
+        if tipper_functions.old_tipper_balance(response["username"]) > 0:
+            # this user has an account with balance on nano_tipper
+            # let's create his account and tell him to move his funds
+            update_history_notes(entry_id, "user did not exist, but used old tipper")
+            tipper_functions.add_new_account(response["username"])
+            response["status"] = 160
+            response["old_tipper"] = True
+        else:
+            update_history_notes(entry_id, "user does not exist")
+            response["status"] = 100
         return response
 
     # parse the amount
@@ -155,7 +183,16 @@ def send_from_comment(message):
 
     # check the user's balance
     if response["amount"] > sender_info["balance"]:
-        update_history_notes(entry_id, "insufficient funds")
+
+        note_text = "insufficient funds"
+        # OLD_TIPPER
+        if tipper_functions.old_tipper_balance(response["username"]) > 0:
+            account_info = tipper_rpc.account_info(sender_info["address"])
+            if account_info.get("error") == 'Account not found' or (account_info['balance'] == '0' and account_info['block_count'] == '0'):
+                response["old_tipper"] = True
+                note_text = "insufficient funds, but used old tipper"
+
+        update_history_notes(entry_id, note_text)
         response["status"] = 160
         return response
 
@@ -217,7 +254,7 @@ def send_from_comment(message):
         return response
 
     # send the nanos!!
-    response["hash"] = send(
+    response["hash"] = tipper_rpc.send(
         sender_info["address"],
         sender_info["private_key"],
         response["amount"],
@@ -258,65 +295,39 @@ def send_from_comment(message):
         f"Sending Nano: {sender_info['address']} {sender_info['private_key']} {response['amount']} {recipient_info['address']} {recipient_info['username']}"
     )
 
-    # # Update the sql and send the PMs if needed
-    # # if there is no private key, it's a donation. No PMs to send
-    # if "private_key" not in recipient_info.keys():
-    #     sql = "UPDATE history SET notes = %s, address = %s, username = %s, recipient_address = %s, amount = %s WHERE id = %s"
-    #     val = (
-    #         "sent to nanocenter address",
-    #         sender_info["address"],
-    #         sender_info["username"],
-    #         recipient_info["address"],
-    #         str(response["amount"]),
-    #         entry_id,
-    #     )
-    #     tipper_functions.exec_sql(sql, val)
-    #     response["status"] = 40
-    #     return response
-
-    # update the sql database and send
-    sql = (
-        "UPDATE history SET notes = %s, address = %s, username = %s, recipient_username = %s, "
-        "recipient_address = %s, amount = %s WHERE id = %s"
-    )
-    val = (
-        "sent to user",
-        sender_info["address"],
-        sender_info["username"],
-        recipient_info["username"],
-        recipient_info["address"],
-        str(response["amount"]),
-        entry_id,
-    )
-    tipper_functions.exec_sql(sql, val)
-
     if response["status"] == 20:
         subject = text.SUBJECTS["first_tip"]
         message_text = (
-            text.WELCOME_TIP
-            % (
-                from_raw(response["amount"]),
-                recipient_info["address"],
-                recipient_info["address"],
-            )
+            text.WELCOME_TIP.format(amount=from_raw(response["amount"]), address=recipient_info["address"])
             + text.COMMENT_FOOTER
         )
         send_pm(recipient_info["username"], subject, message_text)
-        return response
+
     else:
         if not recipient_info["silence"]:
+            # we'll sleep here to give time for the transaction to be confirmed by the network
+            # so that the check balance returns the correct balance without having to "include_only_confirmed"
+            sleep(2)
             receiving_new_balance = check_balance(recipient_info["address"])
             subject = text.SUBJECTS["new_tip"]
+            balance = from_raw(receiving_new_balance[0])+from_raw(receiving_new_balance[1])
             message_text = (
-                text.NEW_TIP
-                % (
-                    from_raw(response["amount"]),
-                    recipient_info["address"],
-                    from_raw(receiving_new_balance[0]),
-                    from_raw(receiving_new_balance[1]),
-                    response["hash"],
+                text.NEW_TIP.format(
+                    amount=from_raw(response["amount"]),
+                    address=recipient_info["address"],
+                    balance=balance,
+                    hash=response["hash"]
                 )
                 + text.COMMENT_FOOTER
             )
             send_pm(recipient_info["username"], subject, message_text)
-        return response
+
+    # OLD_TIPPER
+    if tipper_functions.old_tipper_balance(recipient_info["username"]) > 0:
+        # recipient has funds on the old bot
+        # sending reminder to move funds out of the old bot
+        subject = text.SUBJECTS["old_tipper_reminder"]
+        message_text = text.OLD_TIPPER_REMINDER.format(address=recipient_info["address"]) + text.COMMENT_FOOTER
+        send_pm(recipient_info["username"], subject, message_text)
+
+    return response

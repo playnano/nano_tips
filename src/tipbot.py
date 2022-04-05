@@ -141,8 +141,8 @@ def main_loop():
             shared.SUBREDDITS = shared.get_subreddits()
             update_status_message()
 
-        # refresh USD amount every 5 minutes
-        if time.time() - usd_timer > 300:
+        # refresh USD amount every 60 seconds
+        if time.time() - usd_timer > 60:
             try:
                 usd_timer = time.time()
                 url = "https://min-api.cryptocompare.com/data/price?fsym={}&tsyms={}".format(
