@@ -7,8 +7,8 @@ COMMENT_FOOTER = """
 
 [*^(Nano Tips)*](https://github.com/playnano/nano_tips)*^( | )*
 [*^(Nano)*](https://nano.org)*^( | )*
-[*^(Earn Nano)*](https://earn-nano.com/)*^( | )*
-[*^(Nano Links)*](https://nanolinks.info/)*^( | )*
+[*^(Earn Nano)*](https://playnano.online/?ref=nano_tips)*^( | )*
+[*^(NanoLinks)*](https://nanolinks.org)*^( | )*
 [*^(Opt Out)*](https://reddit.com/message/compose/?to=nano_tips&subject=opt-out&message=opt-out)
 """
 
@@ -76,8 +76,8 @@ Welcome to Nano Tips, a reddit tipbot that allows you to tip and send nano (XNO)
 account is **active** and your nano address is [{address}](https://blocklattice.io/account/{address}).
 
 You will be receiving a tip of `0.001 XNO` as a welcome gift! To load more nano, you can deposit some nano to your 
-address, receive a tip from a fellow redditor, or you can try any of the multiple faucets and earning websites at 
-[Earn Nano](https://earn-nano.com/)!
+address, receive a tip from a fellow redditor, or you can watch videos about nano and earn small amounts while learning at 
+[PlayNANO](https://playnano.online/watch-and-learn?ref=nano_tips)!
 
 By using this service, you agree to the [Terms of Service](https://github.com/playnano/nano_tips#terms-of-service). If 
 you do not accept the Terms of Service, or do not wish to participate, please respond with the text `opt-out`.
@@ -120,8 +120,8 @@ redditors! You have just received a tip in the amount of `{amount:.4g} XNO` at y
 Please activate your account by replying to this message, or any tips which are 30 days old will be returned to the 
 sender.
 
-To load more nano, you can deposit some nano to your address, receive a tip from a fellow redditor, or you can try any 
-of the multiple faucets and earning websites at [Earn Nano](https://earn-nano.com/)!
+To load more nano, you can deposit some nano to your address, receive a tip from a fellow redditor, or you can watch videos 
+about nano and earn small amounts while learning at [PlayNANO](https://playnano.online/watch-and-learn?ref=nano_tips)!
 
 By using this service, you agree to the [Terms of Service](https://github.com/playnano/nano_tips#terms-of-service). If 
 you do not accept the Terms of Service, or do not wish to participate, please respond with the text `opt-out`.
@@ -288,8 +288,8 @@ View your account on the [block explorer](https://blocklattice.io/account/{addre
 
 BALANCE = """Your account balance is `{balance} XNO`.
 
-To load more nano, you can deposit some nano to your address, receive a tip from a fellow redditor, or you can try any 
-of the multiple faucets and earning websites at [Earn Nano](https://earn-nano.com/)!
+To load more nano, you can deposit some nano to your address, receive a tip from a fellow redditor, or you can watch videos 
+about nano and earn small amounts while learning at [PlayNANO](https://playnano.online/watch-and-learn?ref=nano_tips)!
 
 View your account on the [block explorer](https://blocklattice.io/account/{address})."""
 
