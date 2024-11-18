@@ -63,13 +63,6 @@ def handle_message(message):
     if command != "opt-out":
         activate(message.author)
 
-    # OLD_TIPPER
-    using_old_tipper = tipper_functions.old_tipper_balance(message_author) > 0
-    if using_old_tipper and command in \
-            ["balance", "address", "minimum", "percentage", "percent", "send", "withdraw", "silence"] and \
-            tipper_functions.account_info(message_author) is None:
-        tipper_functions.add_new_account(message_author)
-
     # normal commands
     if command in ["help", "!help"]:
         LOGGER.info("Helping")
@@ -131,7 +124,7 @@ def handle_message(message):
     #     response = handle_delete_project(message)
 
     # a few administrative tasks
-    elif command == ["restart"]:
+    elif command == "restart":
         if str(message.author).lower() in [TIPBOT_OWNER]:
             add_history_record(
                 username=str(message.author),
@@ -145,7 +138,7 @@ def handle_message(message):
         if str(message.author).lower() in [TIPBOT_OWNER]:
             add_history_record(
                 username=str(message.author),
-                action="restart",
+                action="stop",
                 comment_text=str(message.body)[:255],
                 comment_or_message="message",
                 comment_id=message.name,
@@ -170,16 +163,6 @@ def handle_message(message):
         bypass_opt_out=True,
         message_id=message.name,
     )
-
-    # OLD_TIPPER
-    if using_old_tipper:
-        # recipient has funds on the old bot
-        # sending reminder to move funds out of the old bot
-        subject = text.SUBJECTS["old_tipper_reminder"]
-        recipient_info = tipper_functions.account_info(message_author)
-        if recipient_info is not None:
-            message_text = text.OLD_TIPPER_REMINDER.format(address=recipient_info["address"]) + COMMENT_FOOTER
-            send_pm(message_author, subject, message_text, bypass_opt_out=True, message_id=message.name)
 
 
 def handle_percentage(message):
@@ -829,14 +812,6 @@ def handle_send(message):
                 + COMMENT_FOOTER
             )
             send_pm(recipient_info["username"], subject, message_text)
-
-    # OLD_TIPPER
-    if tipper_functions.old_tipper_balance(recipient_info["username"]) > 0:
-        # recipient has funds on the old bot
-        # sending reminder to move funds out of the old bot
-        subject = text.SUBJECTS["old_tipper_reminder"]
-        message_text = text.OLD_TIPPER_REMINDER.format(address=recipient_info["address"]) + text.COMMENT_FOOTER
-        send_pm(recipient_info["username"], subject, message_text)
 
     return response
 

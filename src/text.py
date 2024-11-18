@@ -176,41 +176,6 @@ returned.
 
 """
 
-OLD_TIPPER = """
-It seems like you're trying to use your funds from the old tipbot.
-
-Nano Tipper, the reddit nano tipbot, was 
-[discontinued](https://www.reddit.com/r/nanocurrency/comments/t5uotr/reddit_tipbot_to_shut_down/) and I am its 
-replacement, [Nano Tips](https://github.com/playnano/nano_tips).
-
-To start using the new tipbot you will have to move your funds from the old tipbot to the new tipbot (to your Nano Tips 
-address: [{address}](https://blocklattice.io/account/{address})).
-
-To move your funds you just have to 
-[send a PM](https://reddit.com/message/compose/?to=nano_tipper&subject=send&message=send%20all%20{address}) to 
-u/nano_tipper with `send all {address}`.
-
-If you want you can also [donate your funds](https://reddit.com/message/compose/?to=nano_tipper&subject=send&message=send%20all%20nano_1ad11gqnguabcy5sxajbsujbmwhd9eihw874ec1h66xjinzz9hdsapumzm9u)
-back to u/zily88, the creator of the old tipbot.
-"""
-
-OLD_TIPPER_REMINDER = """
-^(This is a reminder. To stop receiving this message, please withdraw all your funds from the old tipbot account.)
-
-It seems like you still have some funds left on the old tipbot.
-
-Nano Tipper, the reddit nano tipbot, was 
-[discontinued](https://www.reddit.com/r/nanocurrency/comments/t5uotr/reddit_tipbot_to_shut_down/) and I am its 
-replacement, [Nano Tips](https://github.com/playnano/nano_tips).
-
-To move your funds to Nano Tips you just have to 
-[send a PM](https://reddit.com/message/compose/?to=nano_tipper&subject=send&message=send%20all%2{address}) to 
-u/nano_tipper with `send all {address}`.
-
-If you want you can also [withdraw your funds](https://reddit.com/message/compose/?to=nano_tipper&subject=send&message=send%20all%20nano_%2E%2E%2E) 
-to any other address of your choosing, or you can [donate your funds](https://reddit.com/message/compose/?to=nano_tipper&subject=send&message=send%20all%20nano_1ad11gqnguabcy5sxajbsujbmwhd9eihw874ec1h66xjinzz9hdsapumzm9u)
-back to u/zily88, the creator of the old tipbot."""
-
 COMMAND_NOT_RECOGNIZED = """
 Beep boop, I'm a bot. Your command was not recognized.
 
@@ -239,8 +204,6 @@ SUBJECTS = {
     "success": "Nano Tips - Your tip was successful",
     "failure": "Nano Tips - Your tip did not go through",
     "convert": "Nano Tips - Currency conversion",
-    "old_tipper": "Nano Tips - Replacement to Nano Tipper shutdown",
-    "old_tipper_reminder": "Nano Tips - You still have funds in the old Nano Tipper",
     "not_recognized": "Nano Tips - Command not recognized"
 }
 

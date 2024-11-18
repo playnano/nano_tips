@@ -42,4 +42,3 @@ def total_funds():
         new_balance = tipper_rpc.check_balance(address)
         balance += new_balance[0] / 10**30 + new_balance[1] / 10**30
     print("Total Nano: ", balance)
-

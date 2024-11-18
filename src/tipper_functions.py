@@ -223,7 +223,6 @@ def update_history_notes(entry_id, text):
     MYCURSOR.execute(sql, val)
     MYDB.commit()
 
-
 def send_pm(recipient, subject, body, bypass_opt_out=False, message_id=None):
     opt_in = True
     # If there is not a bypass to opt in, check the status
@@ -667,19 +666,3 @@ def update_status_message():
     )
     submission = REDDIT.submission(STATUS_POST_ID)
     submission.edit(body)
-
-# OLD_TIPPER
-def old_tipper_balance(username):
-
-    try:
-        r = requests.get(f"http://reddittipbot.com/getaccount?user={username}")
-    except requests.exceptions.RequestException as e:
-        LOGGER.error(f"Connection to 'http://reddittipbot.com' failed: {e}")
-        return 0
-
-    response = json.loads(r.text)
-    if response['account'] != 'Error: No account found for redditor.':
-        balance = check_balance(response['account'])
-        return from_raw(balance[0])
-
-    return 0

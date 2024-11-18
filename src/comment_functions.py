@@ -45,25 +45,6 @@ def handle_comment(message):
     else:
         message.reply(response_text + text.COMMENT_FOOTER)
 
-    # OLD_TIPPER
-    if response["status"] == 160 and response.get('old_tipper'):
-        # user _ didn't have an account, and it was created - or - has 0 balance _AND_ user has balance in old tipbot _
-        # we have to send a message about the new tipper
-
-        subject = text.SUBJECTS["old_tipper"]
-        sender_info = tipper_functions.account_info(response["username"])
-        message_text = text.OLD_TIPPER.format(address=sender_info["address"]) + text.COMMENT_FOOTER
-        send_pm(str(message.author), subject, message_text, True)
-
-    elif tipper_functions.old_tipper_balance(response["username"]) > 0:
-        # user tipped someone from the new bot, with funds on the old bot
-        # sending reminder to move funds out of the old bot
-
-        subject = text.SUBJECTS["old_tipper_reminder"]
-        sender_info = tipper_functions.account_info(response["username"])
-        message_text = text.OLD_TIPPER_REMINDER.format(address=sender_info["address"])  + text.COMMENT_FOOTER
-        send_pm(str(message.author), subject, message_text, True)
-
 
 def send_from_comment(message):
     """
@@ -151,19 +132,8 @@ def send_from_comment(message):
     # pull sender account info
     sender_info = tipper_functions.account_info(response["username"])
     if not sender_info:
-        # OLD_TIPPER
-        # the user doesn't have an account with nano_tips,
-        # let's check if he has an account with balance on nano_tipper
-        if tipper_functions.old_tipper_balance(response["username"]) > 0:
-            # this user has an account with balance on nano_tipper
-            # let's create his account and tell him to move his funds
-            update_history_notes(entry_id, "user did not exist, but used old tipper")
-            tipper_functions.add_new_account(response["username"])
-            response["status"] = 160
-            response["old_tipper"] = True
-        else:
-            update_history_notes(entry_id, "user does not exist")
-            response["status"] = 100
+        update_history_notes(entry_id, "user does not exist")
+        response["status"] = 100
         return response
 
     # parse the amount
@@ -183,16 +153,7 @@ def send_from_comment(message):
 
     # check the user's balance
     if response["amount"] > sender_info["balance"]:
-
-        note_text = "insufficient funds"
-        # OLD_TIPPER
-        if tipper_functions.old_tipper_balance(response["username"]) > 0:
-            account_info = tipper_rpc.account_info(sender_info["address"])
-            if account_info.get("error") == 'Account not found' or (account_info['balance'] == '0' and account_info['block_count'] == '0'):
-                response["old_tipper"] = True
-                note_text = "insufficient funds, but used old tipper"
-
-        update_history_notes(entry_id, note_text)
+        update_history_notes(entry_id, "insufficient funds")
         response["status"] = 160
         return response
 
@@ -321,13 +282,5 @@ def send_from_comment(message):
                 + text.COMMENT_FOOTER
             )
             send_pm(recipient_info["username"], subject, message_text)
-
-    # OLD_TIPPER
-    if tipper_functions.old_tipper_balance(recipient_info["username"]) > 0:
-        # recipient has funds on the old bot
-        # sending reminder to move funds out of the old bot
-        subject = text.SUBJECTS["old_tipper_reminder"]
-        message_text = text.OLD_TIPPER_REMINDER.format(address=recipient_info["address"]) + text.COMMENT_FOOTER
-        send_pm(recipient_info["username"], subject, message_text)
 
     return response
