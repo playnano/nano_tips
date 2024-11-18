@@ -73,7 +73,7 @@ If you have any questions or bug fixes, please post at /r/nano_tips or send a PM
 
 WELCOME_CREATE = """
 Welcome to Nano Tips, a reddit tipbot that allows you to tip and send nano (XNO) to your favorite redditors! Your 
-account is **active** and your nano address is [{address}](https://nanolooker.com/account/{address}).
+account is **active** and your nano address is [{address}](https://blocklattice.io/account/{address}).
 
 You will be receiving a tip of `0.001 XNO` as a welcome gift! To load more nano, you can deposit some nano to your 
 address, receive a tip from a fellow redditor, or you can try any of the multiple faucets and earning websites at 
@@ -108,14 +108,14 @@ Chat!) to /u/nano_tips:
     'balance' - Check your account balance.
     'help' - Receive an in-depth help message.
 
-View your account on the [block explorer](https://nanolooker.com/account/{address}).
+View your account on the [block explorer](https://blocklattice.io/account/{address}).
 
 If you have any questions or bug fixes, please post at /r/nano_tips or send a PM to u/playnano."""
 
 WELCOME_TIP = """
 Welcome to Nano Tips, a reddit tipbot that allows you to tip and send the nano currency (XNO) to your favorite 
 redditors! You have just received a tip in the amount of `{amount:.4g} XNO` at your address 
-[{address}](https://nanolooker.com/account/{address}).
+[{address}](https://blocklattice.io/account/{address}).
 
 Please activate your account by replying to this message, or any tips which are 30 days old will be returned to the 
 sender.
@@ -152,16 +152,16 @@ Chat!) to /u/nano_tips:
     'balance' - Check your account balance.
     'help' - Receive an in-depth help message.
 
-View your account on the [block explorer](https://nanolooker.com/account/{address}).
+View your account on the [block explorer](https://blocklattice.io/account/{address}).
 
 If you have any questions or bug fixes, please post at /r/nano_tips or send a PM to u/playnano."""
 
 NEW_TIP = """
-Somebody just tipped you `{amount:.4g} XNO` at your address [{address}](https://nanolooker.com/account/{address}).
+Somebody just tipped you `{amount:.4g} XNO` at your address [{address}](https://blocklattice.io/account/{address}).
 
 Your account balance is `{balance} XNO`.
 
-[Transaction on NanoLooker](https://nanolooker.com/block/{hash})
+[Transaction on explorer](https://blocklattice.io/block/{hash})
 
 To turn off these notifications, reply with `silence yes`.
 """
@@ -184,7 +184,7 @@ Nano Tipper, the reddit nano tipbot, was
 replacement, [Nano Tips](https://github.com/playnano/nano_tips).
 
 To start using the new tipbot you will have to move your funds from the old tipbot to the new tipbot (to your Nano Tips 
-address: [{address}](https://nanolooker.com/account/{address})).
+address: [{address}](https://blocklattice.io/account/{address})).
 
 To move your funds you just have to 
 [send a PM](https://reddit.com/message/compose/?to=nano_tipper&subject=send&message=send%20all%20{address}) to 
@@ -255,10 +255,10 @@ NAN = "'{}' didn't look like a number to me. If it is blank, there might be extr
 
 # full responses
 SEND_TEXT = {
-    10: "Sent `{amount:.4g} XNO` to /u/{recipient} - [Transaction on NanoLooker](https://nanolooker.com/block/{hash})",
-    11: "Sent `{amount:.4g} XNO` to {recipient} - [Transaction on NanoLooker](https://nanolooker.com/block/{hash})",
-    20: "Creating a new account for /u/{recipient} and sending `{amount:.4g} XNO` - [Transaction on NanoLooker](https://nanolooker.com/block/{hash})",
-    30: "Sent `{amount:.4g} XNO` to address `{recipient}` - [Transaction on NanoLooker](https://nanolooker.com/block/{hash})",
+    10: "Sent `{amount:.4g} XNO` to /u/{recipient} - [Transaction on explorer](https://blocklattice.io/block/{hash})",
+    11: "Sent `{amount:.4g} XNO` to {recipient} - [Transaction on explorer](https://blocklattice.io/block/{hash})",
+    20: "Creating a new account for /u/{recipient} and sending `{amount:.4g} XNO` - [Transaction on explorer](https://blocklattice.io/block/{hash})",
+    30: "Sent `{amount:.4g} XNO` to address `{recipient}` - [Transaction on explorer](https://blocklattice.io/block/{hash})",
 
     100: "You don't have an account yet. Please "
          "[PM me](https://reddit.com/message/compose/?to=nano_tips&subject=create&message=create) with `create` in the "
@@ -280,9 +280,9 @@ SEND_TEXT = {
 
 # for subreddits who like minimal response, or 2nd level responses
 SEND_TEXT_MIN = {
-    10: "^[Sent](https://nanolooker.com/block/{hash}) ^({amount:.4g} XNO to) [^(/u/{recipient})](/u/{recipient})",
-    11: "^[Sent](https://nanolooker.com/block/{hash}) ^({amount:.4g} XNO to {recipient})",
-    20: "^(Made a new account and )^[sent](https://nanolooker.com/block/{hash}) ^({amount:.4g} XNO to) "
+    10: "^[Sent](https://blocklattice.io/block/{hash}) ^({amount:.4g} XNO to) [^(/u/{recipient})](/u/{recipient})",
+    11: "^[Sent](https://blocklattice.io/block/{hash}) ^({amount:.4g} XNO to {recipient})",
+    20: "^(Made a new account and )^[sent](https://blocklattice.io/block/{hash}) ^({amount:.4g} XNO to) "
         "[^(/u/{recipient})](/u/{recipient})",
     100: "^(Tip not sent. Error code )^[{status}](https://github.com/playnano/nano_tips#error-codes)"
 }
@@ -319,16 +319,16 @@ NOT_OPEN = """You do not currently have an account open. To create one, respond 
 body."""
 
 ALREADY_EXISTS = """It looks like you already have an account. In any case it is now **active**. Your nano address is 
-[{address}](https://nanolooker.com/account/{address}).
+[{address}](https://blocklattice.io/account/{address}).
 
-View your account on the [block explorer](https://nanolooker.com/account/{address})."""
+View your account on the [block explorer](https://blocklattice.io/account/{address})."""
 
 BALANCE = """Your account balance is `{balance} XNO`.
 
 To load more nano, you can deposit some nano to your address, receive a tip from a fellow redditor, or you can try any 
 of the multiple faucets and earning websites at [Earn Nano](https://earn-nano.com/)!
 
-View your account on the [block explorer](https://nanolooker.com/account/{address})."""
+View your account on the [block explorer](https://blocklattice.io/account/{address})."""
 
 CONVERT = {
     "no_amount_specified": "You must specify an amount, for example `convert 2.50USD`.",
@@ -390,3 +390,4 @@ def make_return_message(user):
             transaction[3],
         )
     return message
+

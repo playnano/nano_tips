@@ -481,7 +481,7 @@ def test_handle_send_from_PM(handle_send_from_message_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "Sent ```0.01 XNO``` to /u/poor -- [Transaction on NanoLooker](https://nanolooker.com/block/success!)"
+        == "Sent ```0.01 XNO``` to /u/poor -- [Transaction on explorer](https://blocklattice.io/block/success!)"
     )
 
     # send to new account
@@ -497,7 +497,7 @@ def test_handle_send_from_PM(handle_send_from_message_mocks):
     assert (
         text.make_response_text(message, response)
         == "Creating a new account for /u/dne and sending ```0.01 XNO```. [Transac"
-        "tion on NanoLooker](https://nanolooker.com/block/success!)"
+        "tion on explorer](https://blocklattice.io/block/success!)"
     )
 
     # send to valid address
@@ -512,8 +512,8 @@ def test_handle_send_from_PM(handle_send_from_message_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "Sent ```0.01 XNO``` to address nano_valid -- [Transaction on NanoLooker"
-        "](https://nanolooker.com/block/success!)"
+        == "Sent ```0.01 XNO``` to address nano_valid -- [Transaction on explorer"
+        "](https://blocklattice.io/block/success!)"
     )
 
 
@@ -742,14 +742,14 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     assert (
         text.make_response_text(message, response)
         == "Creating a new account for /u/dne and sending ```0.01 Nano```. [Transac"
-        "tion on NanoLooker](https://nanolooker.com/block/success!)"
+        "tion on explorer](https://blocklattice.io/block/success!)"
     )
     # check text for minimal
     message.subreddit = "minimal_sub"
     response = send_from_comment(message)
     assert (
         text.make_response_text(message, response)
-        == "^(Made a new account and )^[sent](https://nanolooker.com/block/"
+        == "^(Made a new account and )^[sent](https://blocklattice.io/block/"
         "success!) ^0.01 ^Nano ^to ^(/u/dne) ^- [^(Nano Tips)](https://githu"
         "b.com/playnano/nano_tips)"
     )
@@ -776,15 +776,15 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "Sent ```0.01 Nano``` to /u/poor -- [Transaction on NanoLooker](https"
-        "://nanolooker.com/account/success!)"
+        == "Sent ```0.01 Nano``` to /u/poor -- [Transaction on explorer](https"
+        "://blocklattice.io/account/success!)"
     )
     # minimal text for new user
     message.subreddit = "minimal_sub"
     response = send_from_comment(message)
     assert (
         text.make_response_text(message, response)
-        == "^[Sent](https://nanolooker.com/block/success!) ^0.01 ^Nano "
+        == "^[Sent](https://blocklattice.io/block/success!) ^0.01 ^Nano "
         "^to ^(/u/poor) ^- [^(Nano Tips)](https://github.com/playnano/nano_tips)"
     )
 
@@ -810,8 +810,8 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "Sent ```0.01 Nano``` to /u/poor -- [Transaction on NanoLooker](https"
-        "://nanolooker.com/account/success!)"
+        == "Sent ```0.01 Nano``` to /u/poor -- [Transaction on explorer](https"
+        "://blocklattice.io/account/success!)"
     )
 
     # send by username mention
@@ -836,8 +836,8 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "Sent ```0.01 Nano``` to /u/poor -- [Transaction on NanoLooker](https"
-        "://nanolooker.com/block/success!)"
+        == "Sent ```0.01 Nano``` to /u/poor -- [Transaction on explorer](https"
+        "://blocklattice.io/block/success!)"
     )
 
     # send at end of by username mention
@@ -862,8 +862,8 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     }
     assert (
         text.make_response_text(message, response)
-        == "Sent ```0.01 XNO``` to /u/poor -- [Transaction on NanoLooker](https"
-        "://nanolooker.com/block/success!)"
+        == "Sent ```0.01 XNO``` to /u/poor -- [Transaction on explorer](https"
+        "://blocklattice.io/block/success!)"
     )
 
     # # no amount specified
@@ -928,7 +928,7 @@ def test_handle_send_from_comment_and_text(handle_send_from_comment_mocks):
     # assert (
     #     text.make_response_text(message, response)
     #     == "Donated ```0.01 Nano``` to Nanocenter Project project_exists -- [Tran"
-    #     "saction on NanoLooker](https://nanolooker.com/block/success!)"
+    #     "saction on explorer](https://blocklattice.io/block/success!)"
     # )
 
 
